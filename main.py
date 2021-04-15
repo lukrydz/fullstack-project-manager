@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, jsonify, request
 from util import json_response
 
 import data_handler
@@ -13,6 +13,41 @@ def index():
     """
     return render_template('index.html')
 
+
+# API SECTION
+
+# user register and login section
+
+
+@app.route("/register", methods=['POST'])
+def user_register():
+    """
+    Register a new user and store credentials in a database
+    Returns OK if successful or user id
+
+    TODO checking if user already exists
+    TODO data validation
+    """
+
+    login, password = request.json['login'], request.json['password']
+    registered = False
+
+    if login and password:
+        registered = data_handler.user_register(login, password)
+
+    return jsonify(success=registered)
+
+
+@app.route("/login", methods=['POST'])
+def user_login():
+    """
+    Takes user login and password
+    Returns session id
+    """
+
+    login, password = request.json['login'], request.json['password']
+
+    return "session_id" # string
 
 @app.route("/get-boards")
 @json_response
@@ -30,6 +65,9 @@ def get_cards_for_board(board_id: int):
     All cards that belongs to a board
     :param board_id: id of the parent board
     """
+    print(data_handler.get_cards_for_board(board_id))
+
+
     return data_handler.get_cards_for_board(board_id)
 
 
