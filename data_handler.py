@@ -37,7 +37,7 @@ def user_register(username, password):
     hashed_pw = util.hash_password(password)
 
     @connection.connection_handler
-    def adduserToBase(cursor, username, hashed_pw):
+    def add_user_to_base(cursor, username, hashed_pw):
 
         query = """
                 INSERT INTO users (password, login_email)
@@ -45,6 +45,6 @@ def user_register(username, password):
         """
         cursor.execute(query, {'password': hashed_pw, 'login': username})
 
-    adduserToBase(username=username, hashed_pw=hashed_pw)
+    add_user_to_base(username=username, hashed_pw=hashed_pw)
 
     return True
