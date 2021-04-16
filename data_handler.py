@@ -1,4 +1,6 @@
-import persistence
+import connection
+import persistence # TODO this is gonna be deleted soon
+import util
 
 
 def get_card_status(status_id):
@@ -28,3 +30,21 @@ def get_cards_for_board(board_id):
             card['status_id'] = get_card_status(card['status_id'])  # Set textual status for the card
             matching_cards.append(card)
     return matching_cards
+
+
+def user_register(username, password):
+
+    hashed_pw = util.hash_password(password)
+
+    @connection.connection_handler
+    def add_user_to_base(cursor, username, hashed_pw):
+
+        query = """
+                INSERT INTO users (password, login_email)
+                VALUES (%(password)s, %(login)s)
+        """
+        cursor.execute(query, {'password': hashed_pw, 'login': username})
+
+    add_user_to_base(username=username, hashed_pw=hashed_pw)
+
+    return True
