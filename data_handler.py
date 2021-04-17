@@ -27,6 +27,7 @@ def get_boards(cursor):
 
     return cursor.fetchall()
 
+
 @connection.connection_handler
 def get_cards_for_board(cursor, board_id):
 
