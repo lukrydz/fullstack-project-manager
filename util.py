@@ -1,6 +1,9 @@
 from functools import wraps
-from flask import jsonify
+
 import bcrypt
+import datetime
+import uuid
+from flask import jsonify
 
 
 def json_response(func):
@@ -24,3 +27,15 @@ def hash_password(password):
 def verify_password(plain_text_password, hashed_password):
     hashed_bytes_password = hashed_password.encode('utf-8')
     return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_bytes_password)
+
+
+def generate_uuid():
+    return uuid.uuid4()
+
+
+def get_timestamp():
+    return datetime.datetime.now()
+
+
+def get_expiration(days):
+    return datetime.datetime.now() + datetime.timedelta(days=days)

@@ -47,11 +47,19 @@ def user_login():
     """
     Takes user login and password
     Returns session id
+    TODO check if session already exists and don't generate new
+
+    there is verify session for checking tokens
+
     """
 
     login, password = request.json['login'], request.json['password']
 
-    return "session_id" # string
+    if data_handler.check_credentials(login, password):
+        return jsonify({'token': data_handler.open_session(login)})
+    else:
+        return jsonify({'msg': 'Invalid credentials.'})
+
 
 @app.route("/get-boards")
 @json_response
