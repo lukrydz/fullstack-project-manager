@@ -27,6 +27,18 @@ def get_boards(cursor):
 
     return cursor.fetchall()
 
+
+@connection.connection_handler
+def create_board(cursor, name):
+
+    query = """
+                    INSERT INTO public_boards (name)
+                    VALUES (%(name)s)
+            """
+    cursor.execute(query, {'name': name})
+
+    return True
+
 @connection.connection_handler
 def get_cards_for_board(cursor, board_id):
 
@@ -129,3 +141,4 @@ def verify_session(token):
 
     else:
         return False
+
