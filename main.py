@@ -1,6 +1,10 @@
 from flask import Flask, render_template, url_for, jsonify, request
 from util import json_response
 
+# this fixes the bug with non-loading JS files
+import mimetypes
+mimetypes.add_type('text/javascript', '.js')
+
 import data_handler
 
 app = Flask(__name__)
