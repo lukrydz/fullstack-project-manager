@@ -27,7 +27,7 @@ export let dataHandler = {
 
         // Here we use an arrow function to keep the value of 'this' on dataHandler.
         //    if we would use function(){...} here, the value of 'this' would change.
-        this._api_get('/boards', (response) => {
+        this._api_get('/boards/public', (response) => {
             this._data['boards'] = response;
             callback(response);
         });

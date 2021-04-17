@@ -27,16 +27,20 @@ def get_boards(cursor):
 
     return cursor.fetchall()
 
+@connection.connection_handler
+def get_cards_for_board(cursor, board_id):
 
-def get_cards_for_board(board_id):
-    persistence.clear_cache()
-    all_cards = persistence.get_cards()
-    matching_cards = []
-    for card in all_cards:
-        if card['board_id'] == str(board_id):
-            card['status_id'] = get_card_status(card['status_id'])  # Set textual status for the card
-            matching_cards.append(card)
-    return matching_cards
+    query = """
+                SELECT public_cards_id, public_cards.name, pc.name as column, "order" FROM public_cards
+                INNER JOIN public_columns pc on pc.public_column_id = public_cards.public_column_id
+                INNER JOIN public_boards pb on pc.public_boards_id = pb.public_boards_id
+                WHERE pb.public_boards_id = %(board_id)s
+                ORDER BY "order" ASC
+    """
+
+    cursor.execute(query, {'board_id': board_id})
+
+    return cursor.fetchall()
 
 
 def user_register(username, password):

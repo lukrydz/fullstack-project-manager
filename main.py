@@ -1,5 +1,6 @@
 from flask import Flask, render_template, url_for, jsonify, request
 from util import json_response
+import json
 
 # this fixes the bug with non-loading JS files
 import mimetypes
@@ -48,6 +49,7 @@ def user_login():
     Takes user login and password
     Returns session id
     TODO check if session already exists and don't generate new
+    TODO garbage collector for expired sessions
 
     there is verify session for checking tokens
 
@@ -61,7 +63,7 @@ def user_login():
         return jsonify({'msg': 'Invalid credentials.'})
 
 
-@app.route("/boards")
+@app.route("/boards/public")
 @json_response
 def get_boards():
     """
@@ -70,17 +72,17 @@ def get_boards():
     return data_handler.get_boards()
 
 
-@app.route("/get-cards/<int:board_id>")
+@app.route("/boards/public/<int:board_id>")
 @json_response
 def get_cards_for_board(board_id: int):
     """
     All cards that belongs to a board
     :param board_id: id of the parent board
     """
-    print(data_handler.get_cards_for_board(board_id))
 
+    fetched_cards = data_handler.get_cards_for_board(board_id=board_id)
 
-    return data_handler.get_cards_for_board(board_id)
+    return fetched_cards
 
 
 def main():
