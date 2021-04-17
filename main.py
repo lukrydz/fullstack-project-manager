@@ -61,7 +61,7 @@ def user_login():
         return jsonify({'msg': 'Invalid credentials.'})
 
 
-@app.route("/get-boards")
+@app.route("/boards")
 @json_response
 def get_boards():
     """
