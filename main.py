@@ -79,12 +79,12 @@ def create_board():
 
     board_name = request.json['name']
 
-    created = data_handler.create_board(name=board_name)
+    created_id = data_handler.create_board(name=board_name)['id']
 
-    if created:
-        return jsonify(success=True)
+    if created_id:
+        return jsonify({'id': created_id})
     else:
-        return jsonify({'msg': 'Databse error while creating new board'})
+        return jsonify({'msg': 'Database error while creating new board'})
 
 
 @app.route("/boards/public/<int:board_id>/")
