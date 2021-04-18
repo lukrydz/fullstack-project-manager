@@ -71,6 +71,20 @@ def new_card(cursor, card_name, card_column, card_order):
     return cursor.fetchone()
 
 
+@connection.connection_handler
+def new_column(cursor, name, board):
+
+    query = """
+            INSERT INTO public_columns (name, public_boards_id)
+            VALUES (%(name)s, %(board)s)
+            RETURNING public_column_id as id
+    """
+
+    cursor.execute(query, {'name': name, 'board': board})
+
+    return cursor.fetchone()
+
+
 def user_register(username, password):
 
     hashed_pw = util.hash_password(password)
@@ -157,5 +171,4 @@ def verify_session(token):
 
     else:
         return False
-
 

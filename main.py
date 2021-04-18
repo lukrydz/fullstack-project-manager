@@ -118,6 +118,23 @@ def new_card():
     return added_card_id
 
 
+@app.route("/boards/public/columns", methods=['POST'])
+@json_response
+def new_column():
+    """
+    Add new column to the database
+    """
+
+    # name, public_boards_id
+
+    column_name = request.json['name']
+    column_board = request.json['board_id']
+
+    added_column_id = data_handler.new_column(name=column_name, board=column_board)
+
+    return added_column_id
+
+
 def main():
     app.run(debug=True)
 
