@@ -58,6 +58,19 @@ def get_cards_for_board(cursor, board_id):
 
 
 @connection.connection_handler
+def get_columns_for_board(cursor, board_id):
+
+    query = """
+                SELECT * FROM public_columns
+                WHERE public_boards_id = %(board_id)s
+    """
+
+    cursor.execute(query, {'board_id': board_id})
+
+    return cursor.fetchall()
+
+
+@connection.connection_handler
 def new_card(cursor, card_name, card_column, card_order):
 
     query = """

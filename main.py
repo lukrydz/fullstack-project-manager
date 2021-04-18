@@ -62,7 +62,7 @@ def user_login():
         return jsonify({'msg': 'Invalid credentials.'})
 
 
-@app.route("/boards/public")
+@app.route("/boards/public", methods=['GET'])
 @json_response
 def get_boards():
     """
@@ -133,6 +133,19 @@ def new_column():
     added_column_id = data_handler.new_column(name=column_name, board=column_board)
 
     return added_column_id
+
+
+@app.route("/boards/public/<int:board_id>/columns")
+@json_response
+def get_columns_for_board(board_id: int):
+    """
+    All columns that belongs to a board
+    :param board_id: id of the parent board
+    """
+
+    fetched_columns = data_handler.get_columns_for_board(board_id=board_id)
+
+    return fetched_columns
 
 
 def main():
