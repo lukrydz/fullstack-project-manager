@@ -87,6 +87,22 @@ def create_board():
         return jsonify({'msg': 'Database error while creating new board'})
 
 
+@app.route("/boards/public", methods=['PUT'])
+@json_response
+def update_board():
+    """
+    Update board by given ID
+    TODO handle multi-element request
+    """
+
+    board_id = request.json['id']
+    board_name = request.json['name']
+
+    result = data_handler.update_board(board_id=board_id, board_name=board_name)
+
+    return result
+
+
 @app.route("/boards/public/<int:board_id>/")
 @json_response
 def get_cards_for_board(board_id: int):

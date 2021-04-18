@@ -42,6 +42,20 @@ def create_board(cursor, name):
 
 
 @connection.connection_handler
+def update_board(cursor, board_id, board_name):
+
+    query = """
+                    UPDATE public_boards
+                    SET name = %(name)s
+                    WHERE public_boards_id = %(board_id)s
+                    RETURNING *
+            """
+    cursor.execute(query, {'name': board_name, 'board_id': board_id})
+
+    return cursor.fetchone()
+
+
+@connection.connection_handler
 def get_cards_for_board(cursor, board_id):
 
     query = """
