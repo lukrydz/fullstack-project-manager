@@ -100,6 +100,24 @@ def get_cards_for_board(board_id: int):
     return fetched_cards
 
 
+@app.route("/boards/public/cards", methods=['POST'])
+@json_response
+def new_card():
+    """
+    Add new card to the database
+    """
+
+    # name, public_column_id, order
+
+    card_name = request.json['name']
+    card_column = request.json['column']
+    card_order = request.json['order']
+
+    added_card_id = data_handler.new_card(card_name=card_name, card_column=card_column, card_order=card_order)
+
+    return added_card_id
+
+
 def main():
     app.run(debug=True)
 
