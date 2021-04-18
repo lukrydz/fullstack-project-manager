@@ -212,3 +212,64 @@ def verify_session(token):
     else:
         return False
 
+
+@connection.connection_handler
+def get_boards_private(cursor):
+
+
+    query = """
+                    SELECT * FROM boards
+            """
+    cursor.execute(query)
+
+    return cursor.fetchall()
+
+@connection.connection_handler
+def create_board_private(cursor, name):
+
+    query = """
+                    INSERT INTO boards (name)
+                    VALUES (%(name)s)
+                    RETURNING boards_id as id
+            """
+    cursor.execute(query, {'name': name})
+
+    return cursor.fetchone()
+
+@connection.connection_handler
+def update_board_private(cursor, board_id, board_name):
+
+    query = """
+                    UPDATE public_boards
+                    SET name = %(name)s
+                    WHERE boards_id = %(board_id)s
+                    RETURNING *
+            """
+    cursor.execute(query, {'name': board_name, 'board_id': board_id})
+
+    return cursor.fetchone()
+
+@connection.connection_handler
+def get_columns_for_board_private(cursor, board_id):
+
+    query = """
+                SELECT * FROM columns
+                WHERE boards_id = %(board_id)s
+    """
+
+    cursor.execute(query, {'board_id': board_id})
+
+    return cursor.fetchall()
+
+@connection.connection_handler
+def new_card_private(cursor, card_name, card_column, card_order):
+
+    query = """
+            INSERT INTO cards ("name", "public_column_id", "order")
+            VALUES (%(name)s, %(public_column_id)s, %(order)s)
+            RETURNING card_id as id
+    """
+
+    cursor.execute(query, {'name': card_name, 'public_column_id': card_column, 'order': card_order})
+
+    return cursor.fetchone()
