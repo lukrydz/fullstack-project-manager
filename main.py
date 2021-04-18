@@ -183,6 +183,23 @@ def get_columns_for_board(board_id: int):
     return fetched_columns
 
 
+@app.route("/boards/public/columns", methods=['PUT'])
+@json_response
+def update_column():
+    """
+    Update column in the database
+    """
+
+    # name, public_boards_id
+
+    column_id = request.json['id']
+    column_name = request.json['name']
+    column_board = request.json['board_id']
+
+    added_column_id = data_handler.update_column(column_id=column_id, name=column_name, board=column_board)
+
+    return added_column_id
+
 def main():
     app.run(debug=True)
 

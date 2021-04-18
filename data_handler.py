@@ -125,6 +125,21 @@ def new_column(cursor, name, board):
     return cursor.fetchone()
 
 
+@connection.connection_handler
+def update_column(cursor, column_id, name, board):
+
+    query = """
+            UPDATE public_columns
+                    SET name = %(name)s, public_boards_id = %(board)s
+                    WHERE public_column_id = %(column_id)s
+                    RETURNING *
+    """
+
+    cursor.execute(query, {'column_id': column_id, 'name': name, 'board': board})
+
+    return cursor.fetchone()
+
+
 def user_register(username, password):
 
     hashed_pw = util.hash_password(password)
