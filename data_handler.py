@@ -99,6 +99,19 @@ def new_card(cursor, card_name, card_column, card_order):
 
 
 @connection.connection_handler
+def update_card(cursor, card_id, card_name, card_column, card_order):
+
+    query = """
+                    UPDATE public_cards
+                    SET name = %(name)s, public_column_id = %(column)s, "order" = %(order)s
+                    WHERE public_cards_id = %(card_id)s
+                    RETURNING *
+            """
+    cursor.execute(query, {'card_id': card_id, 'name': card_name, 'column': card_column, 'order': card_order})
+
+    return cursor.fetchone()
+
+@connection.connection_handler
 def new_column(cursor, name, board):
 
     query = """
@@ -172,8 +185,8 @@ def verify_session(token):
     @connection.connection_handler
     def lookup_session(cursor, session_id):
         query = """
-                SELECT user_id, username, expiration_date FROM sessions
-                INNER JOIN users ON sessions.user_id = users.id
+                SELECT user_id, expiration_date FROM sessions
+                INNER JOIN users ON sessions.user_id = users.user_id
                 WHERE session_id = %(session_id)s
         """
         cursor.execute(query, {'session_id': session_id})

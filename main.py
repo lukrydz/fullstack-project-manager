@@ -134,6 +134,25 @@ def new_card():
     return added_card_id
 
 
+@app.route("/boards/public/cards", methods=['PUT'])
+@json_response
+def update_card():
+    """
+    Update card to the database
+    """
+
+    # name, public_column_id, order
+
+    card_id = request.json['id']
+    card_name = request.json['name']
+    card_column = request.json['column']
+    card_order = request.json['order']
+
+    updated_card_id = data_handler.update_card(card_id=card_id, card_name=card_name, card_column=card_column, card_order=card_order)
+
+    return updated_card_id
+
+
 @app.route("/boards/public/columns", methods=['POST'])
 @json_response
 def new_column():
