@@ -22,6 +22,7 @@ export let dataHandler = {
     },
     init: function () {
     },
+
     getBoards: function (callback) {
         // the boards are retrieved and then the callback function is called with the boards
 

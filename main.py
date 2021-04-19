@@ -1,6 +1,5 @@
 from flask import Flask, render_template, url_for, jsonify, request
 from util import json_response
-import json
 
 # this fixes the bug with non-loading JS files
 import mimetypes
@@ -72,7 +71,23 @@ def get_boards():
     return data_handler.get_boards()
 
 
-@app.route("/boards/public/<int:board_id>")
+@app.route("/boards/public", methods=['POST'])
+def create_board():
+    """
+    Create boards
+    """
+
+    board_name = request.json['name']
+
+    created_id = data_handler.create_board(name=board_name)['id']
+
+    if created_id:
+        return jsonify({'id': created_id})
+    else:
+        return jsonify({'msg': 'Database error while creating new board'})
+
+
+@app.route("/boards/public/<int:board_id>/")
 @json_response
 def get_cards_for_board(board_id: int):
     """
