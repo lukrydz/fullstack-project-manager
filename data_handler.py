@@ -225,51 +225,163 @@ def get_boards_private(cursor):
     return cursor.fetchall()
 
 @connection.connection_handler
-def create_board_private(cursor, name):
+def create_board_private(cursor, name, user_id, archived=False):
 
     query = """
-                    INSERT INTO boards (name)
-                    VALUES (%(name)s)
+                    INSERT INTO boards (name, user_id, archived)
+                    VALUES (%(name)s,%(user_id), archived)
                     RETURNING boards_id as id
             """
-    cursor.execute(query, {'name': name})
+    cursor.execute(query, {'name': name, 'user_id': user_id, 'archived': archived })
 
     return cursor.fetchone()
 
 @connection.connection_handler
-def update_board_private(cursor, board_id, board_name):
+def update_board_private(cursor, board_id, board_name, archived):
 
     query = """
-                    UPDATE public_boards
-                    SET name = %(name)s
+                    UPDATE boards
+                    SET name = %(name)s, archived = %(archived)
                     WHERE boards_id = %(board_id)s
                     RETURNING *
             """
-    cursor.execute(query, {'name': board_name, 'board_id': board_id})
+    cursor.execute(query, {'name': board_name, 'board_id': board_id, 'archived': archived})
 
     return cursor.fetchone()
 
 @connection.connection_handler
-def get_columns_for_board_private(cursor, board_id):
+def get_columns_for_board_private(cursor, board_id, user_id):
 
     query = """
                 SELECT * FROM columns
-                WHERE boards_id = %(board_id)s
+                WHERE boards_id = %(board_id)s and user_id = %(user_id)
+    """
+
+    cursor.execute(query, {'board_id': board_id, 'user_id': user_id})
+
+    return cursor.fetchall()
+
+@connection.connection_handler
+def new_card_private(cursor, card_name, card_column, card_order, archived):
+
+    query = """
+            INSERT INTO cards ("name", "column_id", "order", "archived" )
+            VALUES (%(name)s, %(column_id)s, %(order)s), %(archived)
+            RETURNING card_id as id
+    """
+
+    cursor.execute(query, {'name': card_name, 'public_column_id': card_column, 'order': card_order, 'archived': archived})
+
+    return cursor.fetchone()
+
+@connection.connection_handler
+def update_card_private(cursor, card_id, card_name, card_column, card_order, archived):
+
+    query = """
+                    UPDATE cards
+                    SET name = %(name)s, public_column_id = %(column)s, "order" = %(order)s, archived = %(archived)
+                    WHERE public_cards_id = %(card_id)s
+                    RETURNING *
+            """
+    cursor.execute(query, {'card_id': card_id, 'name': card_name, 'column': card_column, 'order': card_order, 'archived': archived})
+
+    return cursor.fetchone()
+
+@connection.connection_handler
+def update_column(cursor, name, column_id):
+
+    query = """
+                    UPDATE public_collumns
+                    SET name = %(name)s
+                    WHERE public_column_id = %(column_id)s
+                    RETURNING *
+            """
+    cursor.execute(query, {'name': name, 'column_id': column_id})
+
+    return cursor.fetchone()
+
+@connection.connection_handler &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+def update_column_private(cursor, name, column_id):
+
+    query = """
+                    UPDATE public_collumns
+                    SET name = %(name)s
+                    WHERE public_column_id = %(column_id)s
+                    RETURNING *
+            """
+    cursor.execute(query, {'name': name, 'column_id': column_id})
+
+    return cursor.fetchone()
+
+@connection.connection_handler
+def delete_board(cursor, board_id):
+
+    query = """
+               DELETE FROM public_boards
+               WHERE  public_board_id = %(board_id)
+    """
+    cursor.execute(query, {'board_id': board_id})
+
+    return cursor.fetchone()
+
+@connection.connection_handler
+def delete_board_private(cursor, board_id):
+
+    query = """
+               DELETE FROM boards
+               WHERE  board_id = %(board_id)
+    """
+    cursor.execute(query, {'board_id': board_id})
+
+    return cursor.fetchone()
+
+@connection.connection_handler
+def delete_column(cursor, column_id):
+
+    query = """
+            DELETE FROM public_columns
+            WHERE public_column_id = %(column_id)
+    """
+    cursor.execute(query, {'column_id': column_id})
+
+
+@connection.connection_handler
+def delete_column_private(cursor, column_id):
+    query = """
+            DELETE FROM columns
+            WHERE column_id = %(column_id)
+    """
+    cursor.execute(query, {'column_id': column_id})
+
+@connection.connection_handler
+def delete_card(cursor, card_id):
+    query = """
+            DELETE FROM public_cards
+            WHERE public_cards_id = %(card_id)
+    """
+    cursor.execute(query, {'card_id': card_id})
+
+@connection.connection_handler
+def delete_card_private(cursor, card_id):
+    query = """
+            DELETE FROM cards
+            WHERE cards_id = %(card_id)
+    """
+    cursor.execute(query, {'card_id': card_id})
+
+
+@connection.connection_handler
+def get_cards_for_board_private(cursor, board_id):
+
+    query = """
+                SELECT cards_id, cards.name, pc.name as column, "order" FROM cards
+                INNER JOIN columns on columns.column_id = cards.column_id
+                INNER JOIN boards on columns.board_id = boards.board_id
+                WHERE board_id = %(board_id)s
+                ORDER BY "order" ASC
     """
 
     cursor.execute(query, {'board_id': board_id})
 
     return cursor.fetchall()
 
-@connection.connection_handler
-def new_card_private(cursor, card_name, card_column, card_order):
-
-    query = """
-            INSERT INTO cards ("name", "public_column_id", "order")
-            VALUES (%(name)s, %(public_column_id)s, %(order)s)
-            RETURNING card_id as id
-    """
-
-    cursor.execute(query, {'name': card_name, 'public_column_id': card_column, 'order': card_order})
-
-    return cursor.fetchone()

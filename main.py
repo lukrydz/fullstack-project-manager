@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, jsonify, request
 from util import json_response
-
+from flask_login import login_required
 # this fixes the bug with non-loading JS files
 import mimetypes
 mimetypes.add_type('text/javascript', '.js')
@@ -133,6 +133,14 @@ def new_card():
 
     return added_card_id
 
+@app.route("/boards/public/cullumns", methods=['PUT'])
+@json_response
+def update_collumn():
+
+    name = request.json['name']
+    column_id = request.json['column_id']
+
+    updated_column_id = data_handler.update_column(name=name,column_id=column_id )
 
 @app.route("/boards/public/cards", methods=['PUT'])
 @json_response
@@ -189,6 +197,148 @@ def main():
     # Serving the favicon
     with app.app_context():
         app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='favicon/favicon.ico'))
+
+
+@app.route("/boards/private", methods=['GET'])
+@json_response
+@login_required
+def get_boards():
+    """
+    All the boards
+    """
+    return data_handler.get_boards_private()
+
+@app.route("/boards/private", methods=['POST'])
+@login_required
+def create_board():
+    """
+    Create boards
+    """
+
+    board_name = request.json['name']
+
+    created_id = data_handler.create_board_private(name=board_name)['id']
+
+    if created_id:
+        return jsonify({'id': created_id})
+    else:
+        return jsonify({'msg': 'Database error while creating new board'})
+
+@app.route("/boards/private", methods=['PUT'])
+@login_required
+@json_response
+def update_board():
+    """
+    Update board by given ID
+    TODO handle multi-element request
+    """
+
+    board_id = request.json['id']
+    board_name = request.json['name']
+    archived = request.json['archived']
+
+    result = data_handler.update_board_private(board_id=board_id, board_name=board_name, archived=archived)
+
+    return result
+
+@app.route("/boards/private/cards", methods=['POST'])
+@login_required
+@json_response
+def new_card_private():
+    """
+    Add new card to the database
+    """
+
+    # name, column_id, order
+
+    card_name = request.json['name']
+    card_column = request.json['column']
+    card_order = request.json['order']
+    archived = request.json['archived']
+
+
+    added_card_id = data_handler.new_card(card_name=card_name, card_column=card_column, card_order=card_order, archived=archived)
+
+    return added_card_id
+
+@app.route("/boards/private/<int:board_id>/columns")
+@json_response
+@login_required
+def get_columns_for_board_private(board_id: int):
+    """
+    All columns that belongs to a board
+    :param board_id: id of the parent board
+    """
+    user_id = request.json['user_id']
+    fetched_columns = data_handler.get_columns_for_board(board_id=board_id, user_id=user_id)
+
+    return fetched_columns
+
+@app.route("/boards/private/cards", methods=['PUT'])
+@json_response
+@login_required
+def update_card_private():
+    """
+    Update card to the database
+    """
+
+    # name, public_column_id, order
+
+    card_id = request.json['id']
+    card_name = request.json['name']
+    card_column = request.json['column']
+    card_order = request.json['order']
+    archived = request.json['archived']
+
+    updated_card_id = data_handler.update_card(card_id=card_id, card_name=card_name, card_column=card_column, card_order=card_order, archived=archived)
+
+    return updated_card_id
+
+@app.route("/boards/private/<int:board_id>/")
+@json_response
+@login_required
+def get_cards_for_board_private(board_id: int):
+    """
+    All cards that belongs to a board
+    :param board_id: id of the parent board
+    """
+
+    fetched_cards = data_handler.get_cards_for_board_private(board_id=board_id)
+
+    return fetched_cards
+
+
+@app.route("/boards/public/delete/<int:board_id>/", methods=['DELETE'])
+def delete_board(board_id: int):
+
+    deleted_board = data_handler.delete_board(board_id=board_id)
+
+    return deleted_board
+
+
+@app.route("/boards/private/delete/<int:board_id>/", methods=['DELETE'])
+@login_required
+def delete_board_private(board_id: int):
+    deleted_board = data_handler.delete_board_private(board_id=board_id)
+
+    return deleted_board
+
+@app.route("/columns/public/delete/<int:column_id>/", methods=['DELETE'])
+def delete_column(column_id:int):
+    deleted_column = data_handler.delete_column(column_id)
+
+    return deleted_column
+
+
+@app.route("/columns/private/delete/<int:column_id>/", methods=['DELETE'])
+@login_required
+def delete_column_private(column_id: int):
+    deleted_column = data_handler.delete_column_private(column_id)
+
+    return deleted_column
+
+@app.route("/cards/public/delete/<int:card_id>")
+
 
 
 if __name__ == '__main__':
