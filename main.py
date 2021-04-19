@@ -338,8 +338,11 @@ def delete_column_private(column_id: int):
     return deleted_column
 
 @app.route("/cards/public/delete/<int:card_id>")
+def delete_card():
+    pass
 
-
+def update_column_private():
+    pass
 
 if __name__ == '__main__':
     main()

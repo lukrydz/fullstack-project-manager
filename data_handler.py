@@ -300,7 +300,7 @@ def update_column(cursor, name, column_id):
 
     return cursor.fetchone()
 
-@connection.connection_handler &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+@connection.connection_handler
 def update_column_private(cursor, name, column_id):
 
     query = """
