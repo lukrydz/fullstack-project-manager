@@ -133,7 +133,7 @@ def new_card():
 
     return added_card_id
 
-@app.route("/boards/public/cullumns", methods=['PUT'])
+@app.route("/boards/public/columns", methods=['PUT'])
 @json_response
 def update_collumn():
 
@@ -191,12 +191,6 @@ def get_columns_for_board(board_id: int):
     return fetched_columns
 
 
-def main():
-    app.run(debug=True)
-
-    # Serving the favicon
-    with app.app_context():
-        app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='favicon/favicon.ico'))
 
 
 @app.route("/boards/private", methods=['GET'])
@@ -337,12 +331,39 @@ def delete_column_private(column_id: int):
 
     return deleted_column
 
-@app.route("/cards/public/delete/<int:card_id>")
-def delete_card():
-    pass
+@app.route("/cards/public/delete/<int:card_id>", methods=['DELETE'])
+def delete_card(card_id: int):
 
+    deleted_card = data_handler.delete_card(card_id)
+
+    return deleted_card
+
+@app.route("/column/private/update", methods=['PUT'])
+@login_required
 def update_column_private():
-    pass
+
+    name = request.json['name']
+    column_id = request.json['id']
+
+
+    updated_column = data_handler.update_column_private(name=name,column_id=column_id)
+
+    return updated_column
+
+
+@app.route("/cards/private/delete/<int:card_id>", methods=['DELETE'])
+def delete_card_private(card_id: int):
+    deleted_card = data_handler.delete_card_private(card_id)
+
+    return deleted_card
+
+def main():
+    app.run(debug=True)
+
+    # Serving the favicon
+    with app.app_context():
+        app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='favicon/favicon.ico'))
+
 
 if __name__ == '__main__':
     main()
