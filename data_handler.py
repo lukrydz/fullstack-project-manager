@@ -42,6 +42,20 @@ def create_board(cursor, name):
 
 
 @connection.connection_handler
+def update_board(cursor, board_id, board_name):
+
+    query = """
+                    UPDATE public_boards
+                    SET name = %(name)s
+                    WHERE public_boards_id = %(board_id)s
+                    RETURNING *
+            """
+    cursor.execute(query, {'name': board_name, 'board_id': board_id})
+
+    return cursor.fetchone()
+
+
+@connection.connection_handler
 def get_cards_for_board(cursor, board_id):
 
     query = """
@@ -55,6 +69,75 @@ def get_cards_for_board(cursor, board_id):
     cursor.execute(query, {'board_id': board_id})
 
     return cursor.fetchall()
+
+
+@connection.connection_handler
+def get_columns_for_board(cursor, board_id):
+
+    query = """
+                SELECT * FROM public_columns
+                WHERE public_boards_id = %(board_id)s
+    """
+
+    cursor.execute(query, {'board_id': board_id})
+
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def new_card(cursor, card_name, card_column, card_order):
+
+    query = """
+            INSERT INTO public_cards ("name", "public_column_id", "order")
+            VALUES (%(name)s, %(public_column_id)s, %(order)s)
+            RETURNING public_cards_id as id
+    """
+
+    cursor.execute(query, {'name': card_name, 'public_column_id': card_column, 'order': card_order})
+
+    return cursor.fetchone()
+
+
+@connection.connection_handler
+def update_card(cursor, card_id, card_name, card_column, card_order):
+
+    query = """
+                    UPDATE public_cards
+                    SET name = %(name)s, public_column_id = %(column)s, "order" = %(order)s
+                    WHERE public_cards_id = %(card_id)s
+                    RETURNING *
+            """
+    cursor.execute(query, {'card_id': card_id, 'name': card_name, 'column': card_column, 'order': card_order})
+
+    return cursor.fetchone()
+
+@connection.connection_handler
+def new_column(cursor, name, board):
+
+    query = """
+            INSERT INTO public_columns (name, public_boards_id)
+            VALUES (%(name)s, %(board)s)
+            RETURNING public_column_id as id
+    """
+
+    cursor.execute(query, {'name': name, 'board': board})
+
+    return cursor.fetchone()
+
+
+@connection.connection_handler
+def update_column(cursor, column_id, name, board):
+
+    query = """
+            UPDATE public_columns
+                    SET name = %(name)s, public_boards_id = %(board)s
+                    WHERE public_column_id = %(column_id)s
+                    RETURNING *
+    """
+
+    cursor.execute(query, {'column_id': column_id, 'name': name, 'board': board})
+
+    return cursor.fetchone()
 
 
 def user_register(username, password):
@@ -117,8 +200,8 @@ def verify_session(token):
     @connection.connection_handler
     def lookup_session(cursor, session_id):
         query = """
-                SELECT user_id, username, expiration_date FROM sessions
-                INNER JOIN users ON sessions.user_id = users.id
+                SELECT user_id, expiration_date FROM sessions
+                INNER JOIN users ON sessions.user_id = users.user_id
                 WHERE session_id = %(session_id)s
         """
         cursor.execute(query, {'session_id': session_id})

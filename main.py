@@ -62,7 +62,7 @@ def user_login():
         return jsonify({'msg': 'Invalid credentials.'})
 
 
-@app.route("/boards/public")
+@app.route("/boards/public", methods=['GET'])
 @json_response
 def get_boards():
     """
@@ -87,6 +87,22 @@ def create_board():
         return jsonify({'msg': 'Database error while creating new board'})
 
 
+@app.route("/boards/public", methods=['PUT'])
+@json_response
+def update_board():
+    """
+    Update board by given ID
+    TODO handle multi-element request
+    """
+
+    board_id = request.json['id']
+    board_name = request.json['name']
+
+    result = data_handler.update_board(board_id=board_id, board_name=board_name)
+
+    return result
+
+
 @app.route("/boards/public/<int:board_id>/")
 @json_response
 def get_cards_for_board(board_id: int):
@@ -99,6 +115,90 @@ def get_cards_for_board(board_id: int):
 
     return fetched_cards
 
+
+@app.route("/boards/public/cards", methods=['POST'])
+@json_response
+def new_card():
+    """
+    Add new card to the database
+    """
+
+    # name, public_column_id, order
+
+    card_name = request.json['name']
+    card_column = request.json['column']
+    card_order = request.json['order']
+
+    added_card_id = data_handler.new_card(card_name=card_name, card_column=card_column, card_order=card_order)
+
+    return added_card_id
+
+
+@app.route("/boards/public/cards", methods=['PUT'])
+@json_response
+def update_card():
+    """
+    Update card to the database
+    """
+
+    # name, public_column_id, order
+
+    card_id = request.json['id']
+    card_name = request.json['name']
+    card_column = request.json['column']
+    card_order = request.json['order']
+
+    updated_card_id = data_handler.update_card(card_id=card_id, card_name=card_name, card_column=card_column, card_order=card_order)
+
+    return updated_card_id
+
+
+@app.route("/boards/public/columns", methods=['POST'])
+@json_response
+def new_column():
+    """
+    Add new column to the database
+    """
+
+    # name, public_boards_id
+
+    column_name = request.json['name']
+    column_board = request.json['board_id']
+
+    added_column_id = data_handler.new_column(name=column_name, board=column_board)
+
+    return added_column_id
+
+
+@app.route("/boards/public/<int:board_id>/columns")
+@json_response
+def get_columns_for_board(board_id: int):
+    """
+    All columns that belongs to a board
+    :param board_id: id of the parent board
+    """
+
+    fetched_columns = data_handler.get_columns_for_board(board_id=board_id)
+
+    return fetched_columns
+
+
+@app.route("/boards/public/columns", methods=['PUT'])
+@json_response
+def update_column():
+    """
+    Update column in the database
+    """
+
+    # name, public_boards_id
+
+    column_id = request.json['id']
+    column_name = request.json['name']
+    column_board = request.json['board_id']
+
+    added_column_id = data_handler.update_column(column_id=column_id, name=column_name, board=column_board)
+
+    return added_column_id
 
 def main():
     app.run(debug=True)
