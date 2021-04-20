@@ -103,7 +103,7 @@ button{
     margin: 0 auto;
 }
 
-section.boards{
+#boards{
     margin: 20px;
     border: aliceblue;
     background: #ffffff90;

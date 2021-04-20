@@ -19,7 +19,25 @@ export let dom = {
 
         for(let board of boards){
             boardList += `
-                <li>${board.name}</li>
+                <section class="board">
+                    <div class="board-header"><span class="board-title">Example Board</span>
+                        <div class="board-specific hidden">
+                            <button class="card-add btn btn-outline-dark btn-sm board-add" type="button">Add Card</button>
+                                <span class="card-add-form hidden">
+                                    <input type="text" class="card-add-input" value="">
+                                    <button class="card-save-btn btn btn-outline-dark btn-sm board-add">Save</button>
+                                </span>
+                            <button class="column-add btn btn-outline-dark btn-sm board-add" type="button">Add Column</button>
+                                <span class="column-add-form hidden">
+                                    <input type="text" class="column-add-input" value="">
+                                    <button class="save-status-btn btn btn-outline-dark btn-sm board-add">Save</button>
+                                </span>
+                            <button class="board-toggle btn btn-outline-dark btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"><i class="fas fa-chevron-down"></i></button>
+                        </div>
+                        <div class="collapse board-columns" id="collapseExample">
+                        </div>
+                    </div>
+            </section> 
             `;
         }
 
