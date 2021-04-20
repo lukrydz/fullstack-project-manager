@@ -33,8 +33,27 @@ export let dom = {
         let boardsContainer = document.querySelector('#boards');
         boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
     },
+
+
+    loadColumns: function (boardId) {
+        // retrieves cards and makes showCards called
+        dataHandler.getCardsByBoardId(boardId,function(cards)
+        {
+            dom.showColumns(cards);
+        });
+    },
+    showColumns: function (columns) {
+        // shows the cards of a board
+        // it adds necessary event listeners also
+    },
+
+
     loadCards: function (boardId) {
         // retrieves cards and makes showCards called
+        dataHandler.getCardsByBoardId(boardId,function(cards)
+        {
+            dom.showCards(cards);
+        });
     },
     showCards: function (cards) {
         // shows the cards of a board
