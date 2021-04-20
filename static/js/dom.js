@@ -24,7 +24,7 @@ export let dom = {
         }
 
         const outerHtml = `
-            <ul class="board-container">
+            <ul class="container">
                 ${boardList}
             </ul>
         `;
