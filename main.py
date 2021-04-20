@@ -22,6 +22,15 @@ def index():
 
 # user register and login section
 
+@app.route("/login", methods=['GET'])
+def login():
+    return render_template('login.html')
+
+
+@app.route("/register", methods=['GET'])
+def registration():
+    return render_template('register.html')
+
 
 @app.route("/register", methods=['POST'])
 def user_register():
@@ -40,6 +49,7 @@ def user_register():
         registered = data_handler.user_register(login, password)
 
     return jsonify(success=registered)
+
 
 
 @app.route("/login", methods=['POST'])
