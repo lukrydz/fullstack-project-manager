@@ -5,9 +5,7 @@ function init() {
     // init data
     dom.init();
     // loads the boards to the screen
-    if (path === '/'){
-        dom.loadBoards();
-    }
+    dom.loadBoards()
 }
 
 init();
