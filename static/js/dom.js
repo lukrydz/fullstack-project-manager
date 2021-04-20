@@ -59,5 +59,9 @@ export let dom = {
         // shows the cards of a board
         // it adds necessary event listeners also
     },
+
+
+
+
     // here comes more features
 };
