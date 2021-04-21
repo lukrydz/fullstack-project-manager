@@ -219,4 +219,5 @@ export let dom = {
     // add updating cards, or not really??
     //add DELETING everything when clicking on favicon trash
     // add drag and drop and updating
+    // private boards vs public boards
 };
