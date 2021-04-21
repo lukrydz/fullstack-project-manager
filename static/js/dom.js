@@ -8,7 +8,8 @@ export let dom = {
     },
     loadBoards: function () {
         // retrieves boards and makes showBoards called
-        dataHandler.getBoards(function(boards){
+        dataHandler.getBoards(function(boards)
+        {
             dom.showBoards(boards);
             dom.buttonHandler();
         });
@@ -77,11 +78,28 @@ export let dom = {
         let boardsContainer = document.querySelector('#boards');
         boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
     },
+
+
+    loadColumns: function (boardId) {
+        // retrieves cards and makes showCards called
+        dataHandler.getCardsByBoardId(boardId,function(cards)
+        {
+            dom.showColumns(cards);
+        });
+    },
+    showColumns: function (columns) {
+        // shows the cards of a board
+        // it adds necessary event listeners also
+    },
+
+
     loadCards: function (boardId) {
         // retrieves cards and makes showCards called
+
         dataHandler.getCardsByBoardId(boardId, function (cards) {
             dom.showCards(cards)
     })
+
     },
 
     showCards: function (cards) {
@@ -190,6 +208,7 @@ export let dom = {
         }
 
     },
+
     //Changing the title of the column
     buttonHandlerColumns: function () {
         let columnTitles = document.querySelectorAll('.board-column-title')
@@ -221,3 +240,4 @@ export let dom = {
     // add drag and drop and updating
     // private boards vs public boards
 };
+
