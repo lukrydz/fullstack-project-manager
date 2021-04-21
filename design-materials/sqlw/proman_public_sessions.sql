@@ -1,0 +1,9 @@
+insert into public.sessions (session_id, user_id, expiration_date, id) values ('2a40b8de-9dd4-401b-aa1c-e21b977b72b3', 1, '2021-05-17 16:45:21.194524', 1);
+insert into public.sessions (session_id, user_id, expiration_date, id) values ('23ce5ba0-fcd4-40a1-bccf-5924344b7d9f', 1, '2021-05-17 16:48:40.365916', 2);
+insert into public.sessions (session_id, user_id, expiration_date, id) values ('24818e99-ef5d-432d-a92e-153868264da6', 1, '2021-05-17 16:48:44.287140', 3);
+insert into public.sessions (session_id, user_id, expiration_date, id) values ('da6891ec-917e-4988-929c-88aa073daf2a', 1, '2021-05-17 16:48:45.846229', 4);
+insert into public.sessions (session_id, user_id, expiration_date, id) values ('4ddf1414-062e-422d-aa13-dd7d6d299ef4', 1, '2021-05-17 16:48:47.250310', 5);
+insert into public.sessions (session_id, user_id, expiration_date, id) values ('a6cc333f-6a92-404c-814b-3f7862546e4a', 1, '2021-05-17 16:48:48.624388', 6);
+insert into public.sessions (session_id, user_id, expiration_date, id) values ('cf4f32a2-cf64-4b9b-b246-f72028983f71', 1, '2021-05-17 16:48:50.017468', 7);
+insert into public.sessions (session_id, user_id, expiration_date, id) values ('6caebb00-a540-4ebe-9aa9-b2e71e6c4ab1', 1, '2021-05-17 16:48:51.345544', 8);
+insert into public.sessions (session_id, user_id, expiration_date, id) values ('d2570946-11d9-4bb5-b10f-befd83fb7af7', 2, '2021-05-18 19:42:04.777567', 9);
