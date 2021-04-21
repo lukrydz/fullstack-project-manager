@@ -65,8 +65,10 @@ export let dataHandler = {
     ///  USER PART  ///
 
 
-    loginUser: function (userData, callback)
+    loginUser: function (userLogin, userPassword, callback)
     {
+        let userData = { 'login': userLogin, 'password': userPassword }
+
         // creates new card, saves it and calls the callback function with token
         this._api_post('/login', userData,(response) => {
             this._data['token'] = response;
@@ -110,14 +112,16 @@ export let dataHandler = {
 
     createNewBoard: function (boardTitle, callback)
     {
+        let boardData = { 'name': boardTitle }
+
         // creates new board, saves it and calls the callback function with its data
-        this._api_post('/boards/public', boardTitle, (response) => {
+        this._api_post('/boards/public', boardData, (response) => {
             this._data['id'] = response;
             callback(response);
         });
     },
 
-    renameBoard: function (updatedBoardData, callback)
+    updateBoard: function (updatedBoardData, callback)
     {
         // creates new board, saves it and calls the callback function with its data
         this._api_put('/boards/public', updatedBoardData, (response) => {
@@ -129,7 +133,55 @@ export let dataHandler = {
     deleteBoard: function (boardId, callback)
     {
         // creates new board, saves it and calls the callback function with its data
-        this._api_delete(`/boards/public/${boardId}`, (response) => {
+        this._api_delete(`/boards/public/delete/${boardId}`, (response) => {
+            this._data['confirmation'] = response;
+            callback(response);
+        });
+    },
+
+    getBoardsPrivate: function (callback)
+    {
+        // the boards are retrieved and then the callback function is called with the boards
+
+        // Here we use an arrow function to keep the value of 'this' on dataHandler.
+        //    if we would use function(){...} here, the value of 'this' would change.
+        this._api_get('/boards/private', (response) => {
+            this._data['boards'] = response;
+            callback(response);
+        });
+    },
+
+    getBoardPrivate: function (boardId, callback)
+    {
+        // // the board is retrieved and then the callback function is called with the board
+        // this._api_get(`/boards/public/${boardId}`, (response) => {
+        //     this._data['boards'] = response;
+        //     callback(response);
+        // });
+    },
+
+    createNewBoardPrivate: function (boardTitle, callback)
+    {
+        // creates new board, saves it and calls the callback function with its data
+        this._api_post('/boards/private', boardTitle, (response) => {
+            this._data['idP'] = response;
+            callback(response);
+        });
+    },
+
+    updateBoardPrivate: function (updatedBoardData, callback)
+    {
+        // creates new board, saves it and calls the callback function with its data
+        this._api_put('/boards/private', updatedBoardData, (response) => {
+            this._data['updated_board'] = response;
+            callback(response);
+        });
+    },
+
+    deleteBoardPrivate: function (boardId, callback)
+    {
+        // creates new board, saves it and calls the callback function with its data
+        this._api_delete(`/boards/private/delete/${boardId}`, (response) => {
             this._data['confirmation'] = response;
             callback(response);
         });
