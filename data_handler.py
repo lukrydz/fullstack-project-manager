@@ -181,16 +181,18 @@ def open_session(login):
 
 
 def verify_session(token):
+    """TODO database cleaning"""
 
     @connection.connection_handler
     def lookup_session(cursor, session_id):
         query = """
-                SELECT user_id, expiration_date FROM sessions
+                SELECT sessions.user_id, expiration_date FROM sessions
                 INNER JOIN users ON sessions.user_id = users.user_id
                 WHERE session_id = %(session_id)s
         """
         cursor.execute(query, {'session_id': session_id})
         return cursor.fetchone()
+
 
     @connection.connection_handler
     def purge_session(cursor, session_id):
@@ -207,20 +209,21 @@ def verify_session(token):
             purge_session(session_id=token)
             return False
 
-        return session_data['user_id'], session_data['username']
+        return session_data['user_id']
 
     else:
         return False
 
 
 @connection.connection_handler
-def get_boards_private(cursor):
+def get_boards_private(cursor, user_id):
 
 
     query = """
                     SELECT * FROM boards
+                    WHERE user_id = %(id)s
             """
-    cursor.execute(query)
+    cursor.execute(query, {'id': user_id})
 
     return cursor.fetchall()
 
@@ -229,8 +232,8 @@ def create_board_private(cursor, name, user_id, archived=False):
 
     query = """
                     INSERT INTO boards (name, user_id, archived)
-                    VALUES (%(name)s, %(user_id)s, %(archived)s
-                    RETURNING boards_id as id
+                    VALUES (%(name)s, %(user_id)s, %(archived)s)
+                    RETURNING board_id as id
             """
     cursor.execute(query, {'name': name, 'user_id': user_id, 'archived': archived })
 

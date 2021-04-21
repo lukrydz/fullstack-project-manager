@@ -1,11 +1,11 @@
 from flask import Flask, render_template, url_for, jsonify, request
 from util import json_response
-from flask_login import login_required
+import data_handler
+
 # this fixes the bug with non-loading JS files
 import mimetypes
 mimetypes.add_type('text/javascript', '.js')
 
-import data_handler
 
 app = Flask(__name__)
 
@@ -88,7 +88,6 @@ def create_board():
 
 
 @app.route("/boards/public", methods=['PUT'])
-@json_response
 def update_board():
     """
     Update board by given ID
@@ -135,7 +134,7 @@ def new_card():
 
 @app.route("/boards/public/columns", methods=['PUT'])
 @json_response
-def update_collumn():
+def update_column():
 
     name = request.json['name']
     column_id = request.json['column_id']
@@ -195,31 +194,40 @@ def get_columns_for_board(board_id: int):
 
 @app.route("/boards/private", methods=['GET'])
 @json_response
-@login_required
-def get_boards_private():
+def get_boards_private(user_id):
     """
     All the boards
     """
-    return data_handler.get_boards_private()
+
+    user_id = data_handler.verify_session(request.json['token'])
+
+    if user_id:
+        return data_handler.get_boards_private(user_id=user_id)
+
 
 @app.route("/boards/private", methods=['POST'])
-@login_required
 def create_board_private():
     """
     Create boards
     """
 
+    user_id = data_handler.verify_session(request.json['token'])
+
+    if not user_id:
+        return {'msg': 'Session fault.'}
+
     board_name = request.json['name']
 
-    created_id = data_handler.create_board_private(name=board_name)['id']
+    created_id = data_handler.create_board_private(name=board_name, user_id=user_id)['id']
 
     if created_id:
         return jsonify({'id': created_id})
     else:
         return jsonify({'msg': 'Database error while creating new board'})
 
+
 @app.route("/boards/private", methods=['PUT'])
-@login_required
+# @login_d
 @json_response
 def update_board_private():
     """
@@ -236,7 +244,6 @@ def update_board_private():
     return result
 
 @app.route("/boards/private/cards", methods=['POST'])
-@login_required
 @json_response
 def new_card_private():
     """
@@ -257,7 +264,6 @@ def new_card_private():
 
 @app.route("/boards/private/<int:board_id>/columns")
 @json_response
-@login_required
 def get_columns_for_board_private(board_id: int):
     """
     All columns that belongs to a board
@@ -270,7 +276,6 @@ def get_columns_for_board_private(board_id: int):
 
 @app.route("/boards/private/cards", methods=['PUT'])
 @json_response
-@login_required
 def update_card_private():
     """
     Update card to the database
@@ -290,7 +295,6 @@ def update_card_private():
 
 @app.route("/boards/private/<int:board_id>/")
 @json_response
-@login_required
 def get_cards_for_board_private(board_id: int):
     """
     All cards that belongs to a board
@@ -311,7 +315,6 @@ def delete_board(board_id: int):
 
 
 @app.route("/boards/private/delete/<int:board_id>/", methods=['DELETE'])
-@login_required
 def delete_board_private(board_id: int):
     deleted_board = data_handler.delete_board_private(board_id=board_id)
 
@@ -325,7 +328,6 @@ def delete_column(column_id:int):
 
 
 @app.route("/columns/private/delete/<int:column_id>/", methods=['DELETE'])
-@login_required
 def delete_column_private(column_id: int):
     deleted_column = data_handler.delete_column_private(column_id)
 
@@ -339,7 +341,6 @@ def delete_card(card_id: int):
     return deleted_card
 
 @app.route("/column/private/update", methods=['PUT'])
-@login_required
 def update_column_private():
 
     name = request.json['name']
