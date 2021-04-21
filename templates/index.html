@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container">
     <div class="new-board-container">
-        <button type="button" class="add-board-button btn btn-outline-dark btn-md board-add">Add New Board</button>
+        <button type="button" class="add-board-button btn btn-outline-dark btn-md board-add" id="new-board-btn">Add New Board</button>
         <div class="new-board-input hidden">
         <input id="new-board-title" value="" placeholder="Title">
         <button type="button" class="btn btn-outline-dark btn-sm board-add" id="save-newboard-btn">Save</button>
@@ -11,8 +11,8 @@
     </div>
 
 
-<section class="boards" id="boards">
-
+<section id="boards">
+    <div class="board">
         <div class="board-header"><span class="board-title">Board 1</span>
             <button class="btn btn-outline-dark btn-sm board-add" type="button">Add Card</button>
             <button class="btn btn-outline-dark btn-sm board-add" type="button">Add Column</button>
@@ -96,7 +96,7 @@
                 </div>
             </div>
         </div>
-
+        </div>
 
         <div class="board-header"><span class="board-title">Board 2</span>
             <button class="btn btn-outline-dark btn-sm board-add">Add Card</button>
