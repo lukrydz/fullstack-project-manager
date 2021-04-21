@@ -196,7 +196,7 @@ def get_columns_for_board(board_id: int):
 @app.route("/boards/private", methods=['GET'])
 @json_response
 @login_required
-def get_boards():
+def get_boards_private():
     """
     All the boards
     """
@@ -204,7 +204,7 @@ def get_boards():
 
 @app.route("/boards/private", methods=['POST'])
 @login_required
-def create_board():
+def create_board_private():
     """
     Create boards
     """
@@ -221,7 +221,7 @@ def create_board():
 @app.route("/boards/private", methods=['PUT'])
 @login_required
 @json_response
-def update_board():
+def update_board_private():
     """
     Update board by given ID
     TODO handle multi-element request
