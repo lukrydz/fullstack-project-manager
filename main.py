@@ -15,12 +15,22 @@ def index():
     """
     This is a one-pager which shows all the boards and cards
     """
+
     return render_template('index.html')
 
 
 # API SECTION
 
 # user register and login section
+
+@app.route("/login", methods=['GET'])
+def login():
+    return render_template('login.html')
+
+
+@app.route("/register", methods=['GET'])
+def registration():
+    return render_template('register.html')
 
 
 @app.route("/register", methods=['POST'])
@@ -40,6 +50,7 @@ def user_register():
         registered = data_handler.user_register(login, password)
 
     return jsonify(success=registered)
+
 
 
 @app.route("/login", methods=['POST'])
@@ -190,8 +201,6 @@ def get_columns_for_board(board_id: int):
     return fetched_columns
 
 
-
-
 @app.route("/boards/private", methods=['GET'])
 @json_response
 def get_boards_private(user_id):
@@ -227,7 +236,6 @@ def create_board_private():
 
 
 @app.route("/boards/private", methods=['PUT'])
-# @login_d
 @json_response
 def update_board_private():
     """
@@ -357,6 +365,24 @@ def delete_card_private(card_id: int):
     deleted_card = data_handler.delete_card_private(card_id)
 
     return deleted_card
+
+
+@app.route("/boards/public/columns", methods=['PUT'])
+@json_response
+def update_column():
+    """
+    Update column in the database
+    """
+
+    # name, public_boards_id
+
+    column_id = request.json['id']
+    column_name = request.json['name']
+    column_board = request.json['board_id']
+
+    added_column_id = data_handler.update_column(column_id=column_id, name=column_name, board=column_board)
+
+    return added_column_id
 
 def main():
     app.run(debug=True)

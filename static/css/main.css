@@ -34,8 +34,7 @@ body{
 .add-board-button {
     background-color: whitesmoke;
     color: black;
-    margin: 13px 20px 6px;
-    width: 96.4%
+    margin: 13px auto 6px;
 }
 
 /* LOGIN Page */
@@ -53,52 +52,6 @@ body{
 {
     width: 500px;
     margin: 20px auto;
-}
-
-.preview
-{
-    padding: 10px;
-    position: relative;
-}
-
-.preview i
-{
-    color: white;
-    font-size: 35px;
-    transform: translate(50px,130px);
-}
-
-.preview-img
-{
-    border-radius: 100%;
-    box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.7);
-}
-
-.browse-button
-{
-    width: 200px;
-    height: 200px;
-    border-radius: 100%;
-    position: absolute; /* Tweak the position property if the element seems to be unfit */
-    top: 10px;
-    left: 132px;
-    background: linear-gradient(180deg, transparent, black);
-    opacity: 0;
-    transition: 0.3s ease;
-}
-
-.browse-button:hover
-{
-    opacity: 1;
-}
-
-.browse-input
-{
-    width: 200px;
-    height: 200px;
-    border-radius: 100%;
-    transform: translate(-1px,-26px);
-    opacity: 0;
 }
 
 .form-group
@@ -123,8 +76,7 @@ body{
     color: crimson;
     font-size: 13px;
 }
-
-/* NOT MINE - DESIGN PROMAN */
+/* DESIGN */
 
 h1, .board-title, .board-column-title{
     font-weight: 100;
@@ -146,7 +98,12 @@ button{
     padding: 4px 10px;
 }
 
-section.board{
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+section.boards{
     margin: 20px;
     border: aliceblue;
     background: #ffffff90;
@@ -165,7 +122,7 @@ section.board{
     display: inline-block;
     font-size: 20px;
 }
-.board-title, .board-add, .board-toggle{
+.board-title, .board-add, .board-toggle, .column-add, .save-status-btn, .card-save-btn, #new-board-title {
     display: inline-block;
     border-radius: 0.6rem;
     margin-bottom: 0.6rem;
@@ -176,15 +133,17 @@ section.board{
     margin: 13px;
 }
 
-.board-columns{
+.board-columns {
     display: flex;
-    flex-wrap: nowrap;
+    /*flex-wrap: nowrap;*/
 }
+
 
 .board-column{
     padding: 10px;
     flex: 1;
 }
+
 
 .board-column-content{
     min-height: 49px;
@@ -204,7 +163,6 @@ section.board{
 
 .card{
     position: relative;
-    /* background: #222; */
     color: #fff;
     border-radius: var(--border-radius);
     margin: 4px 0;
@@ -245,4 +203,21 @@ section.board{
 .card-title{
     padding-right: 16px;
     margin-bottom: 0.2rem;
+}
+
+.hidden {
+    display: none;
+}
+
+.new-board-container {
+    max-width: 960px;
+    margin: 13px 20px 6px;
+    width: 96.4%;
+
+}
+
+.board-columns {
+    display: flex;
+    justify-content: flex-start;
+
 }
