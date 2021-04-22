@@ -49,20 +49,20 @@ export let dom = {
             boardList += `
                 <section class="board">
                     <div class="board-header"><span class="board-title">${board.title}</span>
-                        <div class="board-specific hidden" data-boardtitle="${board.title}">
+                        <span class="board-specific " data-boardtitle="${board.title}">
                             <button class="card-add btn btn-outline-dark btn-sm board-add" type="button" data-boardid="${board.id}" data-boardtitle="${board.title}">Add Card</button>
                                 <span class="card-add-form hidden" data-boardtitle="${board.title}">
                                     <input type="text" class="card-add-input" data-boardtitle="${board.title}" value="">
                                     <button class="card-save-btn btn btn-outline-dark btn-sm board-add" data-boardtitle="${board.title}">Save</button>
                                 </span>
-                            <button class="column-add btn btn-outline-dark btn-sm board-add" type="button" data-boardtitle="${board.title}">Add Column</button>
+                            <button class="column-add btn btn-outline-dark btn-sm board-add" type="button" data-boardid="${board.id}" data-boardtitle="${board.title}">Add Column</button>
                                 <span class="column-add-form hidden" data-boardtitle="${board.title}">
                                     <input type="text" class="column-add-input" data-boardtitle="${board.title}" value="">
                                     <button class="save-status-btn btn btn-outline-dark btn-sm board-add" data-boardtitle="${board.title}">Save</button>
                                 </span>
-                            <button class="board-toggle btn btn-outline-dark btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" data-boardtitle="${board.title}"><i class="fas fa-chevron-down"></i></button>
-                        </div>
-                        <div class="collapse board-columns" id="collapseExample" data-boardtitle="${board.title}" data-boardid="${board.id}">
+                            <button class="board-toggle btn btn-outline-dark btn-sm" type="button"  data-boardtitle="${board.title}"><i class="fas fa-chevron-down"></i></button>
+                        </span>
+                        <div class="collapse board-columns hidden" id="collapseExample" data-boardtitle="${board.title}" data-boardid="${board.id}">
                         </div>
                     </div>
             </section> 
@@ -86,10 +86,6 @@ export let dom = {
         {
             dom.showColumns(cards);
         });
-    },
-    showColumns: function (columns) {
-        // shows the cards of a board
-        // it adds necessary event listeners also
     },
 
 
@@ -153,6 +149,17 @@ export let dom = {
         let dropDownBtns = document.querySelectorAll('.board-toggle')
         for (let dropDownBtn of dropDownBtns) {
             dropDownBtn.addEventListener('click', function () {
+                let boardTitle = dropDownBtn.dataset.boardtitle;
+                // let boardColumn = document.querySelector(`div.board-columns[data-boardtitle="${boardTitle}"]`);
+                // boardColumn.classList.toggle('hidden');
+                // let boardSpecificItems = document.querySelectorAll(`.board-specific[data-boardtitle="${boardTitle}"]`);
+                // for (let boardSpecificItem of boardSpecificItems) {
+                //     boardSpecificItem.classList.toggle('hidden');
+                // }
+                let boardColumns = document.querySelectorAll(`.board-columns[data-boardtitle="${boardTitle}"]`);
+                for (let boardColumn of boardColumns) {
+                    boardColumn.classList.toggle('hidden');
+                }
                 if (dropDownBtn.firstElementChild.classList.contains('fa-chevron-down')) {
                     dropDownBtn.firstElementChild.classList.remove('fa-chevron-down');
                     dropDownBtn.firstElementChild.classList.add('fa-chevron-up');
@@ -167,10 +174,9 @@ export let dom = {
         for (let addNewColumnBtn of addNewColumnBtns) {
             addNewColumnBtn.addEventListener('click', function () {
                 let boardTitle = addNewColumnBtn.dataset.boardtitle;
-                let newColumnInputs = document.querySelectorAll(`.column-add-form[data-boardtitle="${boardTitle}"]`);
-                for (let newColumnInput of newColumnInputs) {
-                    newColumnInput.classList.toggle('hidden')
-                }
+                let newColumnInput = document.querySelector(`.column-add-form[data-boardtitle="${boardTitle}"]`);
+                newColumnInput.classList.toggle('hidden')
+
             })
         }
         // Saving title of the column
@@ -237,6 +243,7 @@ export let dom = {
     // here comes more features, to do list:
     // add updating cards, or not really??
     //add DELETING everything when clicking on favicon trash
+    // add ARCHIVING cards
     // add drag and drop and updating
     // private boards vs public boards
 };
