@@ -38,7 +38,7 @@ export let dataHandler = {
     {
         // it is not called from outside
         // sends the data to the API, and calls callback function
-
+        console.log(data)
         fetch(url, {
             method: 'PUT',
             credentials: 'same-origin',
