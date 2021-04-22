@@ -106,7 +106,13 @@ export let dom = {
             let boardId = card.board_id
             let column = document.querySelector(`.board-column-content[data-boardid="${boardId}"][data-statustitle="${statusName}"]`)
             let cardsHTML  = column.innerHTML
-            cardsHTML += `<div class="card">${card.title}</div>`
+            cardsHTML += `<div class="card">
+                              <div class="card-content">
+                                  <div class="card-title">${card.title}</div>
+                                  <div class="card-archive"><i class="fas fa-archive"></i></div>
+                                  <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
+                              </div>
+                          </div>`
             column.innerHTML = cardsHTML
         }
     },
@@ -209,7 +215,7 @@ export let dom = {
                     dataHandler.createNewCard(cardTitle, boardId, statusName, function(response){
                         dom.loadStatuses()
                     })
-                //leaving old title when clicking Escape
+                //leaving old content when clicking Escape
                 } else if (e.keyCode === 27) {
                     cardInput.innerHTML = oldCardTitle
                 }

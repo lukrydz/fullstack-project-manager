@@ -115,6 +115,7 @@ button{
     background: #fff;
     border-radius: var(--border-radius) var(--border-radius) 0 0;
     margin: 20px auto;
+
 }
 
 .board-title{
@@ -190,11 +191,11 @@ button{
     background: var(--status-4);
 }
 
-.card-remove{
-    display: block;
-    position: absolute;
+.card-remove, .card-archive{
+    display: inline-block;
     top: 5px;
     right: 6px;
+    bottom: 5px;
     font-size: 12px;
     
     cursor: pointer;
