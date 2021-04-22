@@ -1,7 +1,7 @@
 // It is just an idea how you can structure your data during your page is running.
 // You can use it for testing purposes by simply copy/paste/run in the Console tab in your browser
 
-let keyInLocalStorage = 'proman-data';
+let keyInLocalStorage = 'data';
 
 let sampleData = {
     "statuses": [
@@ -39,42 +39,42 @@ let sampleData = {
             "id": 1,
             "title": "task1",
             "board_id": 1,
-            "status_id": 1,
+            "column_name": 1,
             "order": 3
         },
         {
             "id": 2,
             "title": "task2",
             "board_id": 1,
-            "status_id": 2,
+            "column_name": 2,
             "order": 2
         },
         {
             "id": 3,
             "title": "task3",
             "board_id": 1,
-            "status_id": 4,
+            "column_name": 4,
             "order": 1
         },
         {
             "id": 4,
             "title": "task4",
             "board_id": 2,
-            "status_id": 1,
+            "column_name": 1,
             "order": 3
         },
         {
             "id": 5,
             "title": "task5",
             "board_id": 2,
-            "status_id": 2,
+            "column_name": 2,
             "order": 2
         },
         {
             "id": 6,
             "title": "task6",
             "board_id": 2,
-            "status_id": 3,
+            "column_name": 3,
             "order": 1
         }
     ]
