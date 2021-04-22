@@ -12,10 +12,15 @@ export let dom = {
         {
             dom.showBoards(boards);
             dom.buttonHandler();
+
+            for (let board of boards) {
+                let boardId = board['public_boards_id']
+                dom.loadStatuses(boardId);
+        }
         });
-        dom.loadStatuses();
     },
     loadStatuses: function (boardId) {
+
         dataHandler.getStatuses(boardId,function (statuses) {
             dom.showColumns(statuses);
             dom.buttonHandlerColumns();
@@ -51,7 +56,9 @@ export let dom = {
         for(let board of boards){
             boardList += `
                 <section class="board">
-                    <div class="board-header"><span class="board-title">${board['name']}</span>
+                    <div class="board-header"><span class="board-title" data-boardid="${board['public_boards_id']}">${board['name']}</span>
+                        
+
                         <span class="board-specific " data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
                             <button class="card-add btn btn-outline-dark btn-sm board-add" type="button" data-boardid="${board['public_boards_id']}" data-boardtitle="${board['name']}">Add Card</button>
                                 <span class="card-add-form hidden" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
@@ -71,6 +78,7 @@ export let dom = {
                     </div>
             </section> 
             `;
+            console.log(board['public_boards_id'])
         }
             // <div class="container">
             //     ${boardList}
@@ -83,15 +91,6 @@ export let dom = {
 
         let boardsContainer = document.querySelector('#boards');
         boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
-    },
-
-
-    loadColumns: function (boardId) {
-        // retrieves cards and makes showCards called
-        dataHandler.getCardsByBoardId(boardId,function(cards)
-        {
-            dom.showColumns(cards);
-        });
     },
 
 
@@ -150,6 +149,7 @@ export let dom = {
                 for (let renameBoardBtn of renameBoardBtns) {
                     renameBoardBtn.addEventListener('click', () => {
                         let boardId = renameBoardBtn.dataset.boardid;
+                        console.log(boardId)
                         let new_board_title = document.querySelector(`[data-oldtitle='${old_board_title}']`).value;
                         dataHandler.updateBoard(new_board_title, boardId, function (response) {
                             dom.loadBoards();
@@ -163,6 +163,7 @@ export let dom = {
         for (let dropDownBtn of dropDownBtns) {
             dropDownBtn.addEventListener('click', function () {
                 let boardTitle = dropDownBtn.dataset.boardtitle;
+
                 let boardColumns = document.querySelectorAll(`.board-columns[data-boardtitle="${boardTitle}"]`);
                 for (let boardColumn of boardColumns) {
                     boardColumn.classList.toggle('hidden');
@@ -210,7 +211,9 @@ export let dom = {
             let saveNewCardBtns = document.querySelectorAll('.card-save-btn');
         for (let saveNewCardBtn of saveNewCardBtns) {
             let boardId = saveNewCardBtn.dataset.boardid
-            let firstColumnId =
+            // for (status of statuses) {
+            //     let firstColumnId = statuses[status[0]] //DO ZROBIENIA TO DO okreslic statuses
+            // }
 
             saveNewCardBtn.addEventListener('click', function () {
                 let newCardName = document.querySelector(`.card-add-input[data-boardid="${boardId}"]`).value
