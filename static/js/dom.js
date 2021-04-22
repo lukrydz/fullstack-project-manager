@@ -48,17 +48,18 @@ export let dom = {
 
         let boardList = '';
 
-        for(let board of boards){
+        for(let board of boards)
+        {
             boardList += `
                 <section class="board">
-                    <div class="board-header"><span class="board-title">${board.title}</span>
-                        <span class="board-specific " data-boardtitle="${board.title}">
-                            <button class="card-add btn btn-outline-dark btn-sm board-add" type="button" data-boardid="${board.id}" data-boardtitle="${board.title}">Add Card</button>
-                                <span class="card-add-form hidden" data-boardtitle="${board.title}">
-                                    <input type="text" class="card-add-input" data-boardtitle="${board.title}" value="">
-                                    <button class="card-save-btn btn btn-outline-dark btn-sm board-add" data-boardtitle="${board.title}">Save</button>
+                    <div class="board-header"><span class="board-title">${board['name']}</span>
+                        <span class="board-specific " data-boardtitle="${board.name}">
+                            <button class="card-add btn btn-outline-dark btn-sm board-add" type="button" data-boardid="${board.id}" data-boardtitle="${board.name}">Add Card</button>
+                                <span class="card-add-form hidden" data-boardtitle="${board.name}">
+                                    <input type="text" class="card-add-input" data-boardtitle="${board.name}" value="">
+                                    <button class="card-save-btn btn btn-outline-dark btn-sm board-add" data-boardtitle="${board.name}">Save</button>
                                 </span>
-                            <button class="column-add btn btn-outline-dark btn-sm board-add" type="button" data-boardid="${board.id}" data-boardtitle="${board.title}">Add Column</button>
+                            <button class="column-add btn btn-outline-dark btn-sm board-add" type="button" data-boardid="${board.id}" data-boardtitle="${board.name}">Add Column</button>
                                 <span class="column-add-form hidden" data-boardtitle="${board.title}">
                                     <input type="text" class="column-add-input" data-boardtitle="${board.title}" value="">
                                     <button class="save-status-btn btn btn-outline-dark btn-sm board-add" data-boardtitle="${board.title}">Save</button>
@@ -127,7 +128,7 @@ export let dom = {
         saveNewBoardBtn.addEventListener('click', function () {
             let boardTitle = document.querySelector('#new-board-title').value;
             dataHandler.createNewBoard(boardTitle, function (response) {
-                dom.loadBoards();
+                dom.loadBoards(response);
                 dom.init()
                 newBoardDiv.classList.add('hidden');
             })

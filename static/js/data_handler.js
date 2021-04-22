@@ -25,10 +25,14 @@ export let dataHandler = {
         fetch(url, {
             method: 'POST',
             credentials: 'same-origin',
-            body: JSON.stringify(data)
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data),
         })
         .then(response => response.json())  // parse the response as JSON
         .then(json_response => callback(json_response));  // Call the `callback` with the returned object
+        // .catch(function(err) {console.log(err)});
     },
     _api_put: function (url, data, callback)
     {
@@ -38,7 +42,7 @@ export let dataHandler = {
         fetch(url, {
             method: 'PUT',
             credentials: 'same-origin',
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
         })
         .then(response => response.json())  // parse the response as JSON
         .then(json_response => callback(json_response));  // Call the `callback` with the returned object
@@ -112,11 +116,11 @@ export let dataHandler = {
 
     createNewBoard: function (boardTitle, callback)
     {
-        let boardData = { 'name': boardTitle }
+        let boardData = { "name": boardTitle }
 
         // creates new board, saves it and calls the callback function with its data
         this._api_post('/boards/public', boardData, (response) => {
-            this._data['id'] = response;
+            // this._data['id'] = response;
             callback(response);
         });
     },
