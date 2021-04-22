@@ -63,7 +63,7 @@ export let dom = {
                                     <input type="text" class="column-add-input" data-boardtitle="${board.title}" value="">
                                     <button class="save-status-btn btn btn-outline-dark btn-sm board-add" data-boardtitle="${board.title}">Save</button>
                                 </span>
-                            <button class="board-delete btn btn-outline-dark btn-sm" type="button"  data-boardtitle="${board.title}"><i class="fas fa-trash-alt"></i></button>
+                            <button class="board-delete btn btn-outline-dark btn-sm" type="button"  data-boardid="${board.id}""><i class="fas fa-trash-alt"></i></button>
                             <button class="board-toggle btn btn-outline-dark btn-sm" type="button"  data-boardtitle="${board.title}"><i class="fas fa-chevron-down"></i></button>
                         </span>
                         <div class="collapse board-columns hidden" id="collapseExample" data-boardtitle="${board.title}" data-boardid="${board.id}">
@@ -222,11 +222,12 @@ export let dom = {
         }
         //Delete Board by clicking on trash icon
         let deleteBoardBtns = document.querySelectorAll('.board-delete');
-        for (deleteBoardBtn of deleteBoardBtns) {
-            let boardTitle = button.dataset.boardtitle
-            let boardId = button.dataset.boardid
-            deleteBoardBtn.addEventListener('click', function (e) {
-
+        for (let deleteBoardBtn of deleteBoardBtns) {
+            deleteBoardBtn.addEventListener('click', function (event) {
+                let boardId = deleteBoardBtn.dataset.boardid
+                dataHandler.deleteBoard(boardId, function() {
+                    this.loadBoards()
+                })
             })
         }
 
