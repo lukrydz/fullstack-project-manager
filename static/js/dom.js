@@ -30,8 +30,9 @@ export let dom = {
             let boardId = boardColumn.dataset.boardid;
             for (let status of statuses) {
                 if (status.name === boardTitle) {
-                    boardColumnHTML += `<div class=" collapse board-column" id="collapseExample">
+                    boardColumnHTML += `<div class="board-column" >
                                             <div class="board-column-title" data-boardtitle="${boardTitle}">${status.status_name}</div>
+                                            <button class="column-delete" btn btn-outline-dark btn-sm type="button"  data-boardtitle="${board.title}"><i class="fas fa-trash-alt"></i></button>
                                             <div class="board-column-content" data-boardid="${boardId}" data-boardtitle="${boardTitle}" data-statustitle="${status.name}"></div>
                                         </div>`
                 }
@@ -60,6 +61,7 @@ export let dom = {
                                     <input type="text" class="column-add-input" data-boardtitle="${board.title}" value="">
                                     <button class="save-status-btn btn btn-outline-dark btn-sm board-add" data-boardtitle="${board.title}">Save</button>
                                 </span>
+                            <button class="board-delete" btn btn-outline-dark btn-sm type="button"  data-boardtitle="${board.title}"><i class="fas fa-trash-alt"></i></button>
                             <button class="board-toggle btn btn-outline-dark btn-sm" type="button"  data-boardtitle="${board.title}"><i class="fas fa-chevron-down"></i></button>
                         </span>
                         <div class="collapse board-columns hidden" id="collapseExample" data-boardtitle="${board.title}" data-boardid="${board.id}">
@@ -191,7 +193,7 @@ export let dom = {
             let boardTitle = saveNewStatusBtn.dataset.boardtitle
             saveNewStatusBtn.addEventListener('click', function () {
                 let newStatusName = document.querySelector(`.column-add-input[data-boardtitle="${boardTitle}"]`).value
-                dataHandler.addStatus(newStatusName, boardTitle, function (response) {
+                dataHandler.createNewStatus(newStatusName, boardTitle, function (response) {
                     dom.loadStatuses();
                 })
             })

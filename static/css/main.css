@@ -123,15 +123,15 @@ button{
     display: inline-block;
     font-size: 20px;
 }
-.board-title, .board-add, .board-toggle, .column-add, .save-status-btn, .card-save-btn, #new-board-title, .save-boardname-btn{
+.board-title, .board-add, .board-delete, .board-toggle, .column-delete, .column-add, .save-status-btn, .card-save-btn, #new-board-title, .save-boardname-btn{
     display: inline-block;
     border-radius: 0.6rem;
     margin-bottom: 0.6rem;
 }
 
-.board-toggle{
+.board-delete, .board-toggle {
     float: right;
-    margin: 13px;
+    margin: 7px;
 }
 
 .board-columns {
@@ -193,6 +193,8 @@ button{
 
 .card-remove, .card-archive{
     display: inline-block;
+    float: right;
+    padding: 5px;
     top: 5px;
     right: 6px;
     bottom: 5px;
