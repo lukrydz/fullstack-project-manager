@@ -15,8 +15,8 @@ export let dom = {
         });
         dom.loadStatuses();
     },
-    loadStatuses: function () {
-        dataHandler.getStatuses(function (statuses) {
+    loadStatuses: function (boardId) {
+        dataHandler.getStatuses(boardId,function (statuses) {
             dom.showColumns(statuses);
             dom.buttonHandlerColumns();
             dom.loadCards()
@@ -30,10 +30,12 @@ export let dom = {
             let boardId = boardColumn.dataset.boardid;
             for (let status of statuses) {
                 if (status.name === boardTitle) {
-                    boardColumnHTML += `<div class="board-column" >
-                                            <div class="board-column-title" data-boardtitle="${boardTitle}">${status.status_name}</div>
-                                            <button class="column-delete" btn btn-outline-dark btn-sm type="button"  data-boardtitle="${board.title}"><i class="fas fa-trash-alt"></i></button>
-                                            <div class="board-column-content" data-boardid="${boardId}" data-boardtitle="${boardTitle}" data-statustitle="${status.name}"></div>
+                    boardColumnHTML += `<div class="board-column">
+                                        <div class="board-column-title" data-boardtitle="${boardTitle}">
+                                        <text class="column-name" data-boardtitle="${boardTitle}">${status.status_name}</text>
+                                        <button class="column-remove"><i class="fas fa-trash-alt"></i></button>
+                                        </div>
+                                        <div class="board-column-content" data-boardid="${boardId}" data-boardtitle="${boardTitle}" data-statustitle="${status.name}"></div>
                                         </div>`
                 }
             }
@@ -61,7 +63,7 @@ export let dom = {
                                     <input type="text" class="column-add-input" data-boardtitle="${board.title}" value="">
                                     <button class="save-status-btn btn btn-outline-dark btn-sm board-add" data-boardtitle="${board.title}">Save</button>
                                 </span>
-                            <button class="board-delete" btn btn-outline-dark btn-sm type="button"  data-boardtitle="${board.title}"><i class="fas fa-trash-alt"></i></button>
+                            <button class="board-delete btn btn-outline-dark btn-sm" type="button"  data-boardtitle="${board.title}"><i class="fas fa-trash-alt"></i></button>
                             <button class="board-toggle btn btn-outline-dark btn-sm" type="button"  data-boardtitle="${board.title}"><i class="fas fa-chevron-down"></i></button>
                         </span>
                         <div class="collapse board-columns hidden" id="collapseExample" data-boardtitle="${board.title}" data-boardid="${board.id}">
@@ -146,7 +148,7 @@ export let dom = {
                 for (let renameBoardBtn of renameBoardBtns) {
                     renameBoardBtn.addEventListener('click', () => {
                         let new_board_title = document.querySelector(`[data-oldtitle='${old_board_title}']`).value;
-                        dataHandler.renameBoard(old_board_title, new_board_title, function (response) {
+                        dataHandler.updateBoard(old_board_title, new_board_title, function (response) {
                             dom.loadBoards();
                         })
                     })
@@ -158,12 +160,6 @@ export let dom = {
         for (let dropDownBtn of dropDownBtns) {
             dropDownBtn.addEventListener('click', function () {
                 let boardTitle = dropDownBtn.dataset.boardtitle;
-                // let boardColumn = document.querySelector(`div.board-columns[data-boardtitle="${boardTitle}"]`);
-                // boardColumn.classList.toggle('hidden');
-                // let boardSpecificItems = document.querySelectorAll(`.board-specific[data-boardtitle="${boardTitle}"]`);
-                // for (let boardSpecificItem of boardSpecificItems) {
-                //     boardSpecificItem.classList.toggle('hidden');
-                // }
                 let boardColumns = document.querySelectorAll(`.board-columns[data-boardtitle="${boardTitle}"]`);
                 for (let boardColumn of boardColumns) {
                     boardColumn.classList.toggle('hidden');
@@ -187,7 +183,7 @@ export let dom = {
 
             })
         }
-        // Saving title of the column
+        // Saving title of the new column
         let saveNewStatusBtns = document.querySelectorAll('.save-status-btn');
         for (let saveNewStatusBtn of saveNewStatusBtns) {
             let boardTitle = saveNewStatusBtn.dataset.boardtitle
@@ -208,7 +204,7 @@ export let dom = {
             button.addEventListener('click' , function(){
                 cardInput.classList.toggle('hidden')
             })
-            //Saving the content of the Card when clicking on Enter
+            //Saving the content of the new Card when clicking on Enter
             cardInput.addEventListener('keyup', function(e) {
                 if(e.keyCode === 13) {
                     cardInput.classList.toggle('hidden')
@@ -224,12 +220,21 @@ export let dom = {
             })
 
         }
+        //Delete Board by clicking on trash icon
+        let deleteBoardBtns = document.querySelectorAll('.board-delete');
+        for (deleteBoardBtn of deleteBoardBtns) {
+            let boardTitle = button.dataset.boardtitle
+            let boardId = button.dataset.boardid
+            deleteBoardBtn.addEventListener('click', function (e) {
+
+            })
+        }
 
     },
 
     //Changing the title of the column
     buttonHandlerColumns: function () {
-        let columnTitles = document.querySelectorAll('.board-column-title')
+        let columnTitles = document.querySelectorAll('.column-name')
         for (let columnTitle of columnTitles) {
             let boardTitle = columnTitle.dataset.boardtitle
             //Changing into input on double clicking
@@ -241,7 +246,7 @@ export let dom = {
                     //updating the title when clicking Enter
                     if (event.keyCode === 13) {
                         let newColumnTitle = inputField.value
-                        dataHandler.renameColumn(oldColumnTitle, newColumnTitle, boardTitle, function (response) {
+                        dataHandler.updateStatus(oldColumnTitle, newColumnTitle, boardTitle, function (response) {
                             dom.loadStatuses();
                         })
                         //leaving old title when clicking Escape

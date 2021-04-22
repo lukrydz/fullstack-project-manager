@@ -123,10 +123,18 @@ button{
     display: inline-block;
     font-size: 20px;
 }
-.board-title, .board-add, .board-delete, .board-toggle, .column-delete, .column-add, .save-status-btn, .card-save-btn, #new-board-title, .save-boardname-btn{
+.board-title, .board-add, .board-delete, .board-toggle, .column-remove, .column-add, .save-status-btn, .card-save-btn, #new-board-title, .save-boardname-btn{
     display: inline-block;
     border-radius: 0.6rem;
     margin-bottom: 0.6rem;
+}
+
+.column-remove {
+    padding: 1px 3px 0 3px;
+    background-color: #eeebdd;
+    color: black;
+    margin-bottom: 0;
+    float: right;
 }
 
 .board-delete, .board-toggle {
@@ -218,6 +226,7 @@ button{
     width: 96.4%;
 
 }
+
 
 .board-columns {
     display: flex;
