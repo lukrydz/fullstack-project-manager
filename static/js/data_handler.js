@@ -121,8 +121,10 @@ export let dataHandler = {
         });
     },
 
-    updateBoard: function (updatedBoardData, callback)
+    updateBoard: function (boardTitle, boardId, callback)
     {
+        let updatedBoardData = { "name": boardTitle, "id": boardId }
+
         // creates new board, saves it and calls the callback function with its data
         this._api_put('/boards/public', updatedBoardData, (response) => {
             this._data['updated_board'] = response;

@@ -29,7 +29,7 @@ export let dom = {
             let boardTitle = boardColumn.dataset.boardtitle;
             let boardId = boardColumn.dataset.boardid;
             for (let status of statuses) {
-                if (status['board_id'] === boardId) {
+                if (status['public_boards_id'] === boardId) {
                     boardColumnHTML += `<div class="board-column">
                                         <div class="board-column-title">
                                         <text class="column-name" data-boardtitle="${boardTitle}">${status['name']}</text>
@@ -72,11 +72,13 @@ export let dom = {
             </section> 
             `;
         }
-
+            // <div class="container">
+            //     ${boardList}
+            // </div>
         const outerHtml = `
-            <div class="container">
-                ${boardList}
-            </div>
+            <section id="boards">
+            ${boardList}
+            </section>
         `;
 
         let boardsContainer = document.querySelector('#boards');
@@ -147,8 +149,9 @@ export let dom = {
                 let renameBoardBtns = document.querySelectorAll('.save-boardname-btn')
                 for (let renameBoardBtn of renameBoardBtns) {
                     renameBoardBtn.addEventListener('click', () => {
+                        let boardId = renameBoardBtn.dataset.boardid;
                         let new_board_title = document.querySelector(`[data-oldtitle='${old_board_title}']`).value;
-                        dataHandler.updateBoard(new_board_title, function (response) {
+                        dataHandler.updateBoard(new_board_title, boardId, function (response) {
                             dom.loadBoards();
                         })
                     })
