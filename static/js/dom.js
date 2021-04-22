@@ -148,7 +148,7 @@ export let dom = {
                 for (let renameBoardBtn of renameBoardBtns) {
                     renameBoardBtn.addEventListener('click', () => {
                         let new_board_title = document.querySelector(`[data-oldtitle='${old_board_title}']`).value;
-                        dataHandler.updateBoard(old_board_title, new_board_title, function (response) {
+                        dataHandler.updateBoard(new_board_title, function (response) {
                             dom.loadBoards();
                         })
                     })
