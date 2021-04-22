@@ -196,6 +196,7 @@ export let dom = {
             let boardTitle = button.dataset.boardtitle
             let boardId = button.dataset.boardid
             let cardInput = document.querySelector(`.card-add-form[data-boardtitle="${boardTitle}"]`)
+            let oldCardTitle = cardInput.innerHTML
             button.addEventListener('click' , function(){
                 cardInput.classList.toggle('hidden')
             })
@@ -206,8 +207,11 @@ export let dom = {
                     let cardTitle = document.querySelector(`.card-add-input[data-boardtitle="${boardTitle}"]`).value
                     let statusName = document.querySelector(`.board-column-content[data-boardtitle="${boardTitle}"]`).dataset.statustitle
                     dataHandler.createNewCard(cardTitle, boardId, statusName, function(response){
+                        dom.loadStatuses()
                     })
-                    dom.loadStatuses()
+                //leaving old title when clicking Escape
+                } else if (e.keyCode === 27) {
+                    cardInput.innerHTML = oldCardTitle
                 }
             })
 
