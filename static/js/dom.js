@@ -22,30 +22,34 @@ export let dom = {
     loadStatuses: function (boardId) {
 
         dataHandler.getStatuses(boardId,function (statuses) {
-            dom.showColumns(statuses);
+            dom.showColumns(boardId, statuses);
             dom.buttonHandlerColumns();
-            dom.loadCards()
+            // dom.loadCards()
         })
     },
-        showColumns: function (statuses) {
-        let boardColumns = document.querySelectorAll('.board-columns');
-        for (let boardColumn of boardColumns) {
-            let boardColumnHTML = ''
-            let boardTitle = boardColumn.dataset.boardtitle;
-            let boardId = boardColumn.dataset.boardid;
-            for (let status of statuses) {
-                if (status['public_boards_id'] === boardId) {
-                    boardColumnHTML += `<div class="board-column" data-boardid="${board['public_boards_id']}" data-statusid="${status['public_column_id']}">
-                                        <div class="board-column-title" data-statusid="${status['public_column_id']}">
-                                        <text class="column-name" data-statusid="${status['public_column_id']}">${status['name']}</text>
-                                        <button class="column-remove" data-statusid="${status['public_column_id']}"><i class="fas fa-trash-alt"></i></button>
-                                        </div>
-                                        <div class="board-column-content" data-boardid="${boardId}" data-statustitle="${status['name']}" data-statusid="${status['public_column_id']}"></div>
-                                        </div>`
-                }
-            }
-            boardColumn.innerHTML = boardColumnHTML;
+    showColumns: function (boardId, statuses) {
+        let boardColumnHTML = ''
+        for (let status of statuses)
+        {
+            boardColumnHTML += `<div class="board-column" data-statusid="${status['public_column_id']}">
+                                <div class="board-column-title" data-statusid="${status['public_column_id']}">
+                                <text class="column-name" data-statusid="${status['public_column_id']}">${status['name']}</text>
+                                <button class="column-remove" data-statusid="${status['public_column_id']}"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                                <div class="board-column-content" data-boardid="${boardId}" data-statustitle="${status['name']}" data-statusid="${status['public_column_id']}"></div>
+                                </div>`
+
         }
+        // boardColumn.innerHTML = boardColumnHTML;
+        const outerLayer = `
+        <div id= "board-columns${boardId}">
+        ${boardColumnHTML}
+        </div>
+        `;
+
+        let columnsContainer = document.querySelector(`#board-columns${boardId}`);
+        columnsContainer.insertAdjacentHTML("beforeend", outerLayer);
+
     },
     showBoards: function (boards) {
         // shows boards appending them to #boards div
@@ -74,7 +78,7 @@ export let dom = {
                             <button class="board-delete btn btn-outline-dark btn-sm" type="button"  data-boardid="${board['public_boards_id']}"><i class="fas fa-trash-alt"></i></button>
                             <button class="board-toggle btn btn-outline-dark btn-sm" type="button"  data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}"><i class="fas fa-chevron-down"></i></button>
                         </span>
-                        <div class="collapse board-columns hidden" id="collapseExample" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
+                        <div class="collapse board-columns hidden" id="board-columns${board['public_boards_id']}" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
                         </div>
                     </div>
             </section> 
@@ -120,6 +124,7 @@ export let dom = {
                               </div>
                           </div>`
             column.innerHTML = cardsHTML
+
         }
     },
     // BOARD BUTTONS
