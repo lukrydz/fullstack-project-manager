@@ -89,7 +89,7 @@ def create_board():
     """
 
     board_name = request.json['name']
-
+    print(board_name)
     created_id = data_handler.create_board(name=board_name)['id']
 
     if created_id:
