@@ -285,35 +285,27 @@ export let dom = {
 
     // COLUMN BUTTONS
     //Changing the title of the column
-    buttonHandlerColumns: function ()
-    {
+    buttonHandlerColumns: function () {
         let columnTitles = document.querySelectorAll('.column-name')
         for (let columnTitle of columnTitles) {
-            let boardTitle = columnTitle.dataset.boardtitle
             //Changing into input on double clicking
-            columnTitle.addEventListener('dblclick', function ()
-            {
-                let oldColumnTitle = columnTitle.innerHTML
-                columnTitle.innerHTML = `<input type="text" value="${oldColumnTitle}" data-oldcolumntitle="${oldColumnTitle}">`
-                let inputField = document.querySelector(`[data-oldcolumntitle="${oldColumnTitle}"]`)
-                inputField.addEventListener('keyup', function (event)
-                {
-                    //updating the title when clicking Enter
-                    if (event.keyCode === 13)
-                    {
-                        let newColumnTitle = inputField.value
-                        dataHandler.updateStatus(oldColumnTitle, newColumnTitle, boardTitle, function (response) {
-                            dom.loadStatuses();
+            let oldColumnTitle = columnTitle.innerHTML
+            columnTitle.addEventListener('dblclick', function () {
+                columnTitle.innerHTML = `<input type="text" value="${oldColumnTitle}" data-oldcolumntitle="${oldColumnTitle}">
+                                         <button type="button" class="btn btn-outline-dark btn-sm save-columnname-btn">Save</button>`
+                let renameColumnBtns = document.querySelectorAll('.save-columnname-btn')
+                let columnId = columnTitle.dataset.statusid;
+                for (let renameColumnBtn of renameColumnBtns) {
+                    renameColumnBtn.addEventListener('click', () => {
+                        let newColumnTitle = document.querySelector(`[data-oldcolumntitle="${oldColumnTitle}"]`).value;
+                        dataHandler.updateStatus(newColumnTitle, columnId, function (response) {
+                            let columnTitle = document.querySelector('.column-name');
+                        columnTitle.innerHTML = `${newColumnTitle}`;
                         })
-                        //leaving old title when clicking Escape
-                    } else if (event.keyCode === 27)
-                    {
-                        columnTitle.innerHTML = oldColumnTitle
-                    }
-                })
+                    })
+                }
             })
         };
-
         //Delete Board by clicking on trash icon
         let deleteColumnBtns = document.querySelectorAll('.column-remove');
         for (let deleteColumnBtn of deleteColumnBtns)
