@@ -42,7 +42,7 @@ export let dom = {
         }
         // boardColumn.innerHTML = boardColumnHTML;
         const outerLayer = `
-        <div id= "board-columns${boardId}">
+        <div class= "board-columns">
         ${boardColumnHTML}
         </div>
         `;
@@ -78,7 +78,7 @@ export let dom = {
                             <button class="board-delete btn btn-outline-dark btn-sm" type="button"  data-boardid="${board['public_boards_id']}"><i class="fas fa-trash-alt"></i></button>
                             <button class="board-toggle btn btn-outline-dark btn-sm" type="button"  data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}"><i class="fas fa-chevron-down"></i></button>
                         </span>
-                        <div class="collapse board-columns hidden" id="board-columns${board['public_boards_id']}" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
+                        <div class=" board-columns hidden" id="board-columns${board['public_boards_id']}" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
                         </div>
                     </div>
             </section> 
