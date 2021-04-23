@@ -35,10 +35,10 @@ export let dom = {
             let boardId = boardColumn.dataset.boardid;
             for (let status of statuses) {
                 if (status['public_boards_id'] === boardId) {
-                    boardColumnHTML += `<div class="board-column">
-                                        <div class="board-column-title">
-                                        <text class="column-name" data-boardtitle="${boardTitle}">${status['name']}</text>
-                                        <button class="column-remove"><i class="fas fa-trash-alt"></i></button>
+                    boardColumnHTML += `<div class="board-column" data-boardid="${board['public_boards_id']}" data-statusid="${status['public_column_id']}">
+                                        <div class="board-column-title" data-statusid="${status['public_column_id']}">
+                                        <text class="column-name" data-statusid="${status['public_column_id']}">${status['name']}</text>
+                                        <button class="column-remove" data-statusid="${status['public_column_id']}"><i class="fas fa-trash-alt"></i></button>
                                         </div>
                                         <div class="board-column-content" data-boardid="${boardId}" data-statustitle="${status['name']}" data-statusid="${status['public_column_id']}"></div>
                                         </div>`
@@ -122,6 +122,7 @@ export let dom = {
             column.innerHTML = cardsHTML
         }
     },
+    // BOARD BUTTONS
     buttonHandler: function () {
         // New Board Add Button
         let saveNewBoardBtn = document.querySelector('#save-newboard-btn');
@@ -154,13 +155,10 @@ export let dom = {
 
                         let new_board_title = document.querySelector(`[data-oldtitle='${old_board_title}']`).value;
                         dataHandler.updateBoard(new_board_title, boardId, function (response) {
-                            dom.loadBoards();
+                            let boardTitle = document.querySelector('.board-title');
+                        boardTitle.innerHTML = `${new_board_title}`;
                         })
 
-                        let boardContainer = document.querySelector('.board');
-                        console.log(boardContainer);
-                        boardContainer.innerHTML = '';
-                        console.log(boardContainer);
                     })
                 }
             })
@@ -217,14 +215,14 @@ export let dom = {
             let saveNewCardBtns = document.querySelectorAll('.card-save-btn');
         for (let saveNewCardBtn of saveNewCardBtns) {
             let boardId = saveNewCardBtn.dataset.boardid
-            let statuses = document.querySelector()
+            // let statuses = document.querySelector()
             // for (status of statuses) {
             //     let firstColumnId = statuses[status[0]] //DO ZROBIENIA TO DO okreslic statuses
             // }
 
             saveNewCardBtn.addEventListener('click', function () {
                 let newCardName = document.querySelector(`.card-add-input[data-boardid="${boardId}"]`).value
-                dataHandler.createNewCard(newCardName, statusId, function (response) {
+                dataHandler.createNewCard(newCardName, firstColumnId, function (response) {
                     dom.loadStatuses();
                 })
             })
@@ -257,7 +255,7 @@ export let dom = {
         }
 
     },
-
+    // COLUMN BUTTONS
     //Changing the title of the column
     buttonHandlerColumns: function () {
         let columnTitles = document.querySelectorAll('.column-name')
@@ -281,8 +279,20 @@ export let dom = {
                     }
                 })
             })
+        };
+        //Delete Board by clicking on trash icon
+        let deleteColumnBtns = document.querySelectorAll('.column-remove');
+        for (let deleteColumnBtn of deleteColumnBtns) {
+            deleteColumnBtn.addEventListener('click', function (event) {
+                let columnId = deleteColumnBtn.dataset.columnid;
+                dataHandler.deleteStatus(columnId, function() {
+                    this.loadStatuses()
+                })
+            })
         }
+
     }
+
     // here comes more features, to do list:
     // add updating cards, or not really??
     //add DELETING everything when clicking on favicon trash
