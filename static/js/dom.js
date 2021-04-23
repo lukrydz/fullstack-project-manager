@@ -53,7 +53,8 @@ export let dom = {
 
         let boardList = '';
 
-        for(let board of boards){
+        for(let board of boards)
+        {
             boardList += `
                 <section class="board">
                     <div class="board-header"><span class="board-title" data-boardid="${board['public_boards_id']}">${board['name']}</span>
@@ -128,7 +129,7 @@ export let dom = {
         saveNewBoardBtn.addEventListener('click', function () {
             let boardTitle = document.querySelector('#new-board-title').value;
             dataHandler.createNewBoard(boardTitle, function (response) {
-                dom.loadBoards();
+                dom.loadBoards(response);
                 dom.init()
                 newBoardDiv.classList.add('hidden');
             })
