@@ -12,10 +12,15 @@ export let dom = {
         {
             dom.showBoards(boards);
             dom.buttonHandler();
+
+            for (let board of boards) {
+                let boardId = board['public_boards_id']
+                dom.loadStatuses(boardId);
+        }
         });
-        dom.loadStatuses();
     },
     loadStatuses: function (boardId) {
+
         dataHandler.getStatuses(boardId,function (statuses) {
             dom.showColumns(statuses);
             dom.buttonHandlerColumns();
