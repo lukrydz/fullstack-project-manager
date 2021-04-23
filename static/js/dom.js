@@ -6,52 +6,47 @@ export let dom = {
         this.buttonHandler();
         // This function should run once, when the page is loaded.
     },
-    loadBoards: function () {
+
+    loadBoards: function ()
+    {
         // retrieves boards and makes showBoards called
         dataHandler.getBoards(function(boards)
         {
             dom.showBoards(boards);
             dom.buttonHandler();
 
-            for (let board of boards) {
+            for (let board of boards)
+            {
                 let boardId = board['public_boards_id']
                 dom.loadStatuses(boardId);
-        }
+            }
         });
     },
-    loadStatuses: function (boardId) {
 
-        dataHandler.getStatuses(boardId,function (statuses) {
+    loadStatuses: function (boardId)
+    {
+        dataHandler.getStatuses(boardId,function (statuses)
+        {
             dom.showColumns(boardId, statuses);
             dom.buttonHandlerColumns();
             dom.loadCards(boardId, statuses)
         })
     },
-    showColumns: function (boardId, statuses) {
-        let boardColumnHTML = ''
-        for (let status of statuses)
+
+    loadCards: function (boardId, statuses)
+    {
+        // retrieves cards and makes showCards called
+        dataHandler.getCardsByBoardId(boardId, function (cards)
         {
-            boardColumnHTML += `<div class="board-column" data-statusid="${status['public_column_id']}">
-                                <div class="board-column-title" data-statusid="${status['public_column_id']}">
-                                <text class="column-name" data-statusid="${status['public_column_id']}">${status['name']}</text>
-                                <button class="column-remove" data-statusid="${status['public_column_id']}"><i class="fas fa-trash-alt"></i></button>
-                                </div>
-                                <div class="board-column-content" id="column-cards${status['public_column_id']}" data-statustitle="${status['name']}" data-statusid="${status['public_column_id']}"></div>
-                                </div>`
-
-        }
-        // boardColumn.innerHTML = boardColumnHTML;
-        const outerLayer = `
-        <div class= "board-columns">
-        ${boardColumnHTML}
-        </div>
-        `;
-
-        let columnsContainer = document.querySelector(`#board-columns${boardId}`);
-        columnsContainer.insertAdjacentHTML("beforeend", outerLayer);
-
+            for (let status of statuses)
+            {
+                dom.showCards(cards, status)
+            }
+        })
     },
-    showBoards: function (boards) {
+
+    showBoards: function (boards)
+    {
         // shows boards appending them to #boards div
         // it adds necessary event listeners also
 
@@ -98,30 +93,42 @@ export let dom = {
         boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
     },
 
+    showColumns: function (boardId, statuses)
+    {
+        let boardColumnHTML = ''
+        for (let status of statuses)
+        {
+            boardColumnHTML += `<div class="board-column" data-statusid="${status['public_column_id']}">
+                                <div class="board-column-title" data-statusid="${status['public_column_id']}">
+                                <text class="column-name" data-statusid="${status['public_column_id']}">${status['name']}</text>
+                                <button class="column-remove" data-statusid="${status['public_column_id']}"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                                <div class="board-column-content" id="column-cards${status['public_column_id']}" data-statustitle="${status['name']}" data-statusid="${status['public_column_id']}"></div>
+                                </div>`
 
-    loadCards: function (boardId, statuses) {
-        // retrieves cards and makes showCards called
+        }
+        // boardColumn.innerHTML = boardColumnHTML;
+        const outerLayer = `
+        <div class= "board-columns">
+        ${boardColumnHTML}
+        </div>
+        `;
 
-        dataHandler.getCardsByBoardId(boardId, function (cards) {
-            for (let status of statuses)
-            {
-                dom.showCards(cards, status)
-            }
-
-
-    })
+        let columnsContainer = document.querySelector(`#board-columns${boardId}`);
+        columnsContainer.insertAdjacentHTML("beforeend", outerLayer);
 
     },
 
-    showCards: function (cards, status) {
+    showCards: function (cards, status)
+    {
         // shows the cards of a board
         // it adds necessary event listeners also
-
-        for (let card of cards) {
+        let cardsHTML = ''
+        for (let card of cards)
+        {
             if (card["column"] === status["name"])
             {
-                let column = document.querySelector(`#column-cards${status['public_column_id']}`)
-                let cardsHTML  = ''
+                console.log(card['name'])
                 cardsHTML += `<div class="card">
                                   <div class="card-content">
                                       <div class="card-title">${card['name']}</div>
@@ -129,22 +136,21 @@ export let dom = {
                                       <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
                                   </div>
                               </div>`
-                return cardsHTML
-
             }
-         }
-        // .then(
-        //     const outerLayer = `
-        // <div class= "card">
-        // ${cardsHTML}
-        // </div>
-        // `;
-        //
-        // let cardsContainer = document.querySelector(`#column-cards${status['public_column_id']}`);
-        // cardsContainer.insertAdjacentHTML("beforeend", outerLayer);
+        }
+        const outerLayer = `
+        <div class= "card">
+        ${cardsHTML}
+        </div>
+        `;
+
+        let cardsContainer = document.querySelector(`#column-cards${status['public_column_id']}`);
+        cardsContainer.insertAdjacentHTML("beforeend", outerLayer);
     },
+
     // BOARD BUTTONS
-    buttonHandler: function () {
+    buttonHandler: function ()
+    {
         // New Board Add Button
         let saveNewBoardBtn = document.querySelector('#save-newboard-btn');
         let newBoardDiv = document.querySelector('.new-board-input');
@@ -276,37 +282,47 @@ export let dom = {
         }
 
     },
+
     // COLUMN BUTTONS
     //Changing the title of the column
-    buttonHandlerColumns: function () {
+    buttonHandlerColumns: function ()
+    {
         let columnTitles = document.querySelectorAll('.column-name')
         for (let columnTitle of columnTitles) {
             let boardTitle = columnTitle.dataset.boardtitle
             //Changing into input on double clicking
-            columnTitle.addEventListener('dblclick', function () {
+            columnTitle.addEventListener('dblclick', function ()
+            {
                 let oldColumnTitle = columnTitle.innerHTML
                 columnTitle.innerHTML = `<input type="text" value="${oldColumnTitle}" data-oldcolumntitle="${oldColumnTitle}">`
                 let inputField = document.querySelector(`[data-oldcolumntitle="${oldColumnTitle}"]`)
-                inputField.addEventListener('keyup', function (event) {
+                inputField.addEventListener('keyup', function (event)
+                {
                     //updating the title when clicking Enter
-                    if (event.keyCode === 13) {
+                    if (event.keyCode === 13)
+                    {
                         let newColumnTitle = inputField.value
                         dataHandler.updateStatus(oldColumnTitle, newColumnTitle, boardTitle, function (response) {
                             dom.loadStatuses();
                         })
                         //leaving old title when clicking Escape
-                    } else if (event.keyCode === 27) {
+                    } else if (event.keyCode === 27)
+                    {
                         columnTitle.innerHTML = oldColumnTitle
                     }
                 })
             })
         };
+
         //Delete Board by clicking on trash icon
         let deleteColumnBtns = document.querySelectorAll('.column-remove');
-        for (let deleteColumnBtn of deleteColumnBtns) {
-            deleteColumnBtn.addEventListener('click', function (event) {
+        for (let deleteColumnBtn of deleteColumnBtns)
+        {
+            deleteColumnBtn.addEventListener('click', function (event)
+            {
                 let columnId = deleteColumnBtn.dataset.columnid;
-                dataHandler.deleteStatus(columnId, function() {
+                dataHandler.deleteStatus(columnId, function()
+                {
                     this.loadStatuses()
                 })
             })
