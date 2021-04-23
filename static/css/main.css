@@ -142,11 +142,6 @@ button{
     margin: 7px;
 }
 
-.board-columns {
-    display: flex;
-    /*flex-wrap: nowrap;*/
-}
-
 
 .board-column{
     padding: 10px;
@@ -231,5 +226,6 @@ button{
 .board-columns {
     display: flex;
     justify-content: flex-start;
+
 
 }

@@ -56,7 +56,7 @@ export let dom = {
         for(let board of boards)
         {
             boardList += `
-                <section class="board">
+                <section class="board" data-boardid="${board['public_boards_id']}>
                     <div class="board-header"><span class="board-title" data-boardid="${board['public_boards_id']}">${board['name']}</span>
                         
 
@@ -147,14 +147,20 @@ export let dom = {
                 boardTitleItem.innerHTML = `<input type="text" value="${old_board_title}" data-oldtitle="${old_board_title}">
                                             <button type="button" class="btn btn-outline-dark btn-sm save-boardname-btn">Save</button>`
                 let renameBoardBtns = document.querySelectorAll('.save-boardname-btn')
+                let boardId = boardTitleItem.dataset.boardid;
+                        console.log(boardId)
                 for (let renameBoardBtn of renameBoardBtns) {
                     renameBoardBtn.addEventListener('click', () => {
-                        let boardId = renameBoardBtn.dataset.boardid;
-                        console.log(boardId)
+
                         let new_board_title = document.querySelector(`[data-oldtitle='${old_board_title}']`).value;
                         dataHandler.updateBoard(new_board_title, boardId, function (response) {
                             dom.loadBoards();
                         })
+
+                        let boardContainer = document.querySelector('.board');
+                        console.log(boardContainer);
+                        boardContainer.innerHTML = '';
+                        console.log(boardContainer);
                     })
                 }
             })
