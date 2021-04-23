@@ -15,6 +15,9 @@ body{
     
 }
 
+.boards {
+    display: flex;
+}
 /* NAVBAR */
 
 #title .container-fluid {
@@ -226,6 +229,7 @@ button{
 .board-columns {
     display: flex;
     justify-content: flex-start;
-
+    flex-wrap: wrap;
+    align-content: center;
 
 }

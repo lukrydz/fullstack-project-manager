@@ -24,7 +24,7 @@ export let dom = {
         dataHandler.getStatuses(boardId,function (statuses) {
             dom.showColumns(boardId, statuses);
             dom.buttonHandlerColumns();
-            // dom.loadCards()
+            dom.loadCards(boardId, statuses)
         })
     },
     showColumns: function (boardId, statuses) {
@@ -36,13 +36,13 @@ export let dom = {
                                 <text class="column-name" data-statusid="${status['public_column_id']}">${status['name']}</text>
                                 <button class="column-remove" data-statusid="${status['public_column_id']}"><i class="fas fa-trash-alt"></i></button>
                                 </div>
-                                <div class="board-column-content" data-boardid="${boardId}" data-statustitle="${status['name']}" data-statusid="${status['public_column_id']}"></div>
+                                <div class="board-column-content" id="column-cards${status['public_column_id']}" data-statustitle="${status['name']}" data-statusid="${status['public_column_id']}"></div>
                                 </div>`
 
         }
         // boardColumn.innerHTML = boardColumnHTML;
         const outerLayer = `
-        <div id= "board-columns${boardId}">
+        <div class= "board-columns">
         ${boardColumnHTML}
         </div>
         `;
@@ -78,7 +78,7 @@ export let dom = {
                             <button class="board-delete btn btn-outline-dark btn-sm" type="button"  data-boardid="${board['public_boards_id']}"><i class="fas fa-trash-alt"></i></button>
                             <button class="board-toggle btn btn-outline-dark btn-sm" type="button"  data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}"><i class="fas fa-chevron-down"></i></button>
                         </span>
-                        <div class="collapse board-columns hidden" id="board-columns${board['public_boards_id']}" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
+                        <div class=" board-columns hidden" id="board-columns${board['public_boards_id']}" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
                         </div>
                     </div>
             </section> 
@@ -99,33 +99,49 @@ export let dom = {
     },
 
 
-    loadCards: function (boardId) {
+    loadCards: function (boardId, statuses) {
         // retrieves cards and makes showCards called
 
         dataHandler.getCardsByBoardId(boardId, function (cards) {
-            dom.showCards(cards)
+            for (let status of statuses)
+            {
+                dom.showCards(cards, status)
+            }
+
+
     })
 
     },
 
-    showCards: function (cards) {
+    showCards: function (cards, status) {
         // shows the cards of a board
         // it adds necessary event listeners also
-        for (let card of cards) {
-            let statusName = card.s
-            let boardId = card.board_id
-            let column = document.querySelector(`.board-column-content[data-boardid="${boardId}"][data-statustitle="${column['name']}"]`)
-            let cardsHTML  = column.innerHTML
-            cardsHTML += `<div class="card">
-                              <div class="card-content">
-                                  <div class="card-title">${card['name']}</div>
-                                  <div class="card-archive"><i class="fas fa-archive"></i></div>
-                                  <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
-                              </div>
-                          </div>`
-            column.innerHTML = cardsHTML
 
-        }
+        for (let card of cards) {
+            if (card["column"] === status["name"])
+            {
+                let column = document.querySelector(`#column-cards${status['public_column_id']}`)
+                let cardsHTML  = ''
+                cardsHTML += `<div class="card">
+                                  <div class="card-content">
+                                      <div class="card-title">${card['name']}</div>
+                                      <div class="card-archive"><i class="fas fa-archive"></i></div>
+                                      <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
+                                  </div>
+                              </div>`
+                return cardsHTML
+
+            }
+         }
+        // .then(
+        //     const outerLayer = `
+        // <div class= "card">
+        // ${cardsHTML}
+        // </div>
+        // `;
+        //
+        // let cardsContainer = document.querySelector(`#column-cards${status['public_column_id']}`);
+        // cardsContainer.insertAdjacentHTML("beforeend", outerLayer);
     },
     // BOARD BUTTONS
     buttonHandler: function () {
