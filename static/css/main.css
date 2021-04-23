@@ -115,6 +115,7 @@ button{
     background: #fff;
     border-radius: var(--border-radius) var(--border-radius) 0 0;
     margin: 20px auto;
+
 }
 
 .board-title{
@@ -122,15 +123,23 @@ button{
     display: inline-block;
     font-size: 20px;
 }
-.board-title, .board-add, .board-toggle, .column-add, .save-status-btn, .card-save-btn, #new-board-title, .save-boardname-btn{
+.board-title, .board-add, .board-delete, .board-toggle, .column-remove, .column-add, .save-status-btn, .card-save-btn, #new-board-title, .save-boardname-btn{
     display: inline-block;
     border-radius: 0.6rem;
     margin-bottom: 0.6rem;
 }
 
-.board-toggle{
+.column-remove {
+    padding: 1px 3px 0 3px;
+    background-color: #eeebdd;
+    color: black;
+    margin-bottom: 0;
     float: right;
-    margin: 13px;
+}
+
+.board-delete, .board-toggle {
+    float: right;
+    margin: 7px;
 }
 
 .board-columns {
@@ -190,11 +199,13 @@ button{
     background: var(--status-4);
 }
 
-.card-remove{
-    display: block;
-    position: absolute;
+.card-remove, .card-archive{
+    display: inline-block;
+    float: right;
+    padding: 5px;
     top: 5px;
     right: 6px;
+    bottom: 5px;
     font-size: 12px;
     
     cursor: pointer;
@@ -215,6 +226,7 @@ button{
     width: 96.4%;
 
 }
+
 
 .board-columns {
     display: flex;

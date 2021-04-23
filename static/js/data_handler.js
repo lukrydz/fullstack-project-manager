@@ -25,20 +25,27 @@ export let dataHandler = {
         fetch(url, {
             method: 'POST',
             credentials: 'same-origin',
-            body: JSON.stringify(data)
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data),
         })
         .then(response => response.json())  // parse the response as JSON
         .then(json_response => callback(json_response));  // Call the `callback` with the returned object
+        // .catch(function(err) {console.log(err)});
     },
     _api_put: function (url, data, callback)
     {
         // it is not called from outside
         // sends the data to the API, and calls callback function
-
+        console.log(data)
         fetch(url, {
             method: 'PUT',
             credentials: 'same-origin',
-            body: JSON.stringify(data)
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data),
         })
         .then(response => response.json())  // parse the response as JSON
         .then(json_response => callback(json_response));  // Call the `callback` with the returned object
@@ -65,11 +72,12 @@ export let dataHandler = {
     ///  USER PART  ///
 
 
-    loginUser: function (userData, callback)
+    loginUser: function (userLogin, userPassword, callback)
     {
+        let userData = { 'login': userLogin, 'password': userPassword }
+
         // creates new card, saves it and calls the callback function with token
         this._api_post('/login', userData,(response) => {
-            this._data['token'] = response;
             callback(response);
         });
     },
@@ -78,7 +86,6 @@ export let dataHandler = {
     {
         // creates new user, saves it and calls the callback function with an answer
         this._api_post('/register', userData, (response) => {
-            this._data['answer'] = response;
             callback(response);
         });
     },
@@ -94,7 +101,6 @@ export let dataHandler = {
         // Here we use an arrow function to keep the value of 'this' on dataHandler.
         //    if we would use function(){...} here, the value of 'this' would change.
         this._api_get('/boards/public', (response) => {
-            this._data['boards'] = response;
             callback(response);
         });
     },
@@ -103,25 +109,25 @@ export let dataHandler = {
     {
         // // the board is retrieved and then the callback function is called with the board
         // this._api_get(`/boards/public/${boardId}`, (response) => {
-        //     this._data['boards'] = response;
-        //     callback(response);
         // });
     },
 
     createNewBoard: function (boardTitle, callback)
     {
+        let boardData = { "name": boardTitle }
+
         // creates new board, saves it and calls the callback function with its data
-        this._api_post('/boards/public', boardTitle, (response) => {
-            this._data['id'] = response;
+        this._api_post('/boards/public', boardData, (response) => {
             callback(response);
         });
     },
 
-    renameBoard: function (updatedBoardData, callback)
+    updateBoard: function (boardTitle, boardId, callback)
     {
+        let updatedBoardData = { "name": boardTitle, "id": boardId }
+
         // creates new board, saves it and calls the callback function with its data
         this._api_put('/boards/public', updatedBoardData, (response) => {
-            this._data['updated_board'] = response;
             callback(response);
         });
     },
@@ -129,8 +135,51 @@ export let dataHandler = {
     deleteBoard: function (boardId, callback)
     {
         // creates new board, saves it and calls the callback function with its data
-        this._api_delete(`/boards/public/${boardId}`, (response) => {
-            this._data['confirmation'] = response;
+        this._api_delete(`/boards/public/delete/${boardId}/`, (response) => {
+            callback(response);
+        });
+    },
+
+    getBoardsPrivate: function (callback)
+    {
+        // the boards are retrieved and then the callback function is called with the boards
+        // Here we use an arrow function to keep the value of 'this' on dataHandler.
+        //    if we would use function(){...} here, the value of 'this' would change.
+        this._api_get('/boards/private', (response) => {
+            callback(response);
+        });
+    },
+
+    getBoardPrivate: function (boardId, callback)
+    {
+        // // the board is retrieved and then the callback function is called with the board
+        // this._api_get(`/boards/public/${boardId}`, (response) => {
+        //     callback(response);
+        // });
+    },
+
+    createNewBoardPrivate: function (boardTitle, callback)
+    {
+        let newBoardData = { "name": boardTitle }
+        // creates new board, saves it and calls the callback function with its data
+        this._api_post('/boards/private', newBoardData, (response) => {
+            callback(response);
+        });
+    },
+
+    updateBoardPrivate: function (boardTitle, boardId, archived, callback)
+    {
+        let updatedBoardData = { "name": boardTitle, "id": boardId, "archived": archived }
+        // creates new board, saves it and calls the callback function with its data
+        this._api_put('/boards/private', updatedBoardData, (response) => {
+            callback(response);
+        });
+    },
+
+    deleteBoardPrivate: function (boardId, callback)
+    {
+        // creates new board, saves it and calls the callback function with its data
+        this._api_delete(`/boards/private/delete/${boardId}`, (response) => {
             callback(response);
         });
     },
@@ -143,7 +192,6 @@ export let dataHandler = {
     {
         // the statuses are retrieved and then the callback function is called with the statuses
         this._api_get(`/boards/public/${boardId}/columns`, (response) => {
-            this._data['statuses'] = response;
             callback(response);
         });
     },
@@ -152,25 +200,24 @@ export let dataHandler = {
     {
         // the status is retrieved and then the callback function is called with the status
         // this._api_get('/boards/public', (response) => {
-        //     this._data['statuses] = response;
         //     callback(response);
         // });
     },
 
-    createNewStatus: function (newColumnData, callback)
+    createNewStatus: function (boardTitle, boardId, callback)
     {
+        let newColumnData = { "name": boardTitle, "board_id": boardId }
         // creates new board, saves it and calls the callback function with its data
         this._api_post('/boards/public/columns', newColumnData, (response) => {
-            this._data['id'] = response;
             callback(response);
         });
     },
 
-    updateStatus: function (updatedStatusData, callback)
+    updateStatus: function (boardTitle, boardId, callback)
     {
+        let newColumnData = { "name": boardTitle, "column_id": boardId }
         // creates new board, saves it and calls the callback function with its data
-        this._api_put('/boards/public/columns', updatedStatusData, (response) => {
-            this._data['updated_status'] = response;
+        this._api_put('/boards/public/columns', newColumnData, (response) => {
             callback(response);
         });
     },
@@ -178,8 +225,49 @@ export let dataHandler = {
     deleteStatus: function (columnId, callback)
     {
         // creates new board, saves it and calls the callback function with its data
-        this._api_delete(`/boards/public/columns/${columnId}`, (response) => {
-            this._data['confirmation'] = response;
+        this._api_delete(`/columns/public/delete/${columnId}`, (response) => {
+            callback(response);
+        });
+    },
+
+    getStatusesPrivate: function (boardId, callback)
+    {
+        // the statuses are retrieved and then the callback function is called with the statuses
+        this._api_get(`/boards/private/${boardId}/columns`, (response) => {
+            callback(response);
+        });
+    },
+
+    getStatusPrivate: function (statusId, callback)
+    {
+        // the status is retrieved and then the callback function is called with the status
+        // this._api_get('/boards/private', (response) => {
+        //     callback(response);
+        // });
+    },
+
+    createNewStatusPrivate: function (boardTitle, boardId, callback)
+    {
+        let newStatusDataPrivate = { "name": boardTitle, "board_id": boardId }
+        // creates new board, saves it and calls the callback function with its data
+        this._api_post('/boards/private/columns', newStatusDataPrivate, (response) => {
+            callback(response);
+        });
+    },
+
+    updateStatusPrivate: function (columnName, columnId, callback)
+    {
+        let newColumnData = { "name": columnName, "id": columnId }
+        // creates new board, saves it and calls the callback function with its data
+        this._api_put('/boards/private/columns', newColumnData, (response) => {
+            callback(response);
+        });
+    },
+
+    deleteStatusPrivate: function (columnId, callback)
+    {
+        // creates new board, saves it and calls the callback function with its data
+        this._api_delete(`/columns/private/delete/${columnId}`, (response) => {
             callback(response);
         });
     },
@@ -192,7 +280,6 @@ export let dataHandler = {
     {
         // the cards are retrieved and then the callback function is called with the cards
         this._api_get(`/boards/public/${boardId}`, (response) => {
-            this._data['cards'] = response;
             callback(response);
         });
     },
@@ -201,25 +288,26 @@ export let dataHandler = {
     {
         // // the card is retrieved and then the callback function is called with the card
         // this._api_get('/boards/public/cards', (response) => {
-        //     this._data['cards'] = response;
         //     callback(response);
         // });
     },
 
-    createNewCard: function (cardTitle, boardId, statusId, callback)
+    createNewCard: function (cardTitle, column, order, callback)
     {
+        let newCardData = { "name": cardTitle, "column": column, "order": order }
+
         // creates new card, saves it and calls the callback function with its data
-        this._api_post('/boards/public/cards', (response) => {
-            this._data['id'] = response;
+        this._api_post('/boards/public/cards', newCardData, (response) => {
             callback(response);
         });
     },
 
-    updateCard: function (updatedCardData, callback)
+    updateCard: function (id, cardName, column, order, callback)
     {
+        let updatedCardData = { "id": id, "name": cardName, "column": column, "order": order }
+
         // creates new board, saves it and calls the callback function with its data
         this._api_put('/boards/public/cards', updatedCardData, (response) => {
-            this._data['updated_board'] = response;
             callback(response);
         });
     },
@@ -228,7 +316,50 @@ export let dataHandler = {
     {
         // creates new board, saves it and calls the callback function with its data
         this._api_delete(`/boards/public/cards/${cardId}`, (response) => {
-            this._data['confirmation'] = response;
+            callback(response);
+        });
+    },
+
+    getCardsByBoardIdPrivate: function (boardId, callback)
+    {
+        // the cards are retrieved and then the callback function is called with the cards
+        this._api_get(`/boards/private/${boardId}`, (response) => {
+            callback(response);
+        });
+    },
+
+    getCardPrivate: function (cardId, callback)
+    {
+        // // the card is retrieved and then the callback function is called with the card
+        // this._api_get('/boards/private/cards', (response) => {
+        //     callback(response);
+        // });
+    },
+
+    createNewCardPrivate: function (cardTitle, column, order, archived, callback)
+    {
+        let newCardData = { "name": cardTitle, "column": column, "order": order, "archived": archived }
+
+        // creates new card, saves it and calls the callback function with its data
+        this._api_post('/boards/private/cards', newCardData, (response) => {
+            callback(response);
+        });
+    },
+
+    updateCardPrivate: function (cardId, cardName, cardColumn, cardOrder, archived, callback)
+    {
+        let updatedCardData = { "id": cardId, "name": cardName, "column": cardColumn, "order": cardOrder, "archived": archived }
+
+        // creates new board, saves it and calls the callback function with its data
+        this._api_put('/boards/private/cards', updatedCardData, (response) => {
+            callback(response);
+        });
+    },
+
+    deleteCardPrivate: function (cardId, callback)
+    {
+        // creates new board, saves it and calls the callback function with its data
+        this._api_delete(`/boards/private/cards/${cardId}`, (response) => {
             callback(response);
         });
     },

@@ -12,11 +12,16 @@ export let dom = {
         {
             dom.showBoards(boards);
             dom.buttonHandler();
+
+            for (let board of boards) {
+                let boardId = board['public_boards_id']
+                dom.loadStatuses(boardId);
+        }
         });
-        dom.loadStatuses();
     },
-    loadStatuses: function () {
-        dataHandler.getStatuses(function (statuses) {
+    loadStatuses: function (boardId) {
+
+        dataHandler.getStatuses(boardId,function (statuses) {
             dom.showColumns(statuses);
             dom.buttonHandlerColumns();
             dom.loadCards()
@@ -29,10 +34,13 @@ export let dom = {
             let boardTitle = boardColumn.dataset.boardtitle;
             let boardId = boardColumn.dataset.boardid;
             for (let status of statuses) {
-                if (status.name === boardTitle) {
-                    boardColumnHTML += `<div class=" collapse board-column" id="collapseExample">
-                                            <div class="board-column-title" data-boardtitle="${boardTitle}">${status.status_name}</div>
-                                            <div class="board-column-content" data-boardid="${boardId}" data-boardtitle="${boardTitle}" data-statustitle="${status.name}"></div>
+                if (status['public_boards_id'] === boardId) {
+                    boardColumnHTML += `<div class="board-column">
+                                        <div class="board-column-title">
+                                        <text class="column-name" data-boardtitle="${boardTitle}">${status['name']}</text>
+                                        <button class="column-remove"><i class="fas fa-trash-alt"></i></button>
+                                        </div>
+                                        <div class="board-column-content" data-boardid="${boardId}" data-statustitle="${status['name']}" data-statusid="${status['id']}">></div>
                                         </div>`
                 }
             }
@@ -48,48 +56,41 @@ export let dom = {
         for(let board of boards){
             boardList += `
                 <section class="board">
-                    <div class="board-header"><span class="board-title">${board.title}</span>
-                        <div class="board-specific hidden" data-boardtitle="${board.title}">
-                            <button class="card-add btn btn-outline-dark btn-sm board-add" type="button" data-boardid="${board.id}" data-boardtitle="${board.title}">Add Card</button>
-                                <span class="card-add-form hidden" data-boardtitle="${board.title}">
-                                    <input type="text" class="card-add-input" data-boardtitle="${board.title}" value="">
-                                    <button class="card-save-btn btn btn-outline-dark btn-sm board-add" data-boardtitle="${board.title}">Save</button>
+                    <div class="board-header"><span class="board-title" data-boardid="${board['public_boards_id']}">${board['name']}</span>
+                        
+
+                        <span class="board-specific " data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
+                            <button class="card-add btn btn-outline-dark btn-sm board-add" type="button" data-boardid="${board['public_boards_id']}" data-boardtitle="${board['name']}">Add Card</button>
+                                <span class="card-add-form hidden" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
+                                    <input type="text" class="card-add-input" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}" value="">
+                                    <button class="card-save-btn btn btn-outline-dark btn-sm board-add" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">Save</button>
                                 </span>
-                            <button class="column-add btn btn-outline-dark btn-sm board-add" type="button" data-boardtitle="${board.title}">Add Column</button>
-                                <span class="column-add-form hidden" data-boardtitle="${board.title}">
-                                    <input type="text" class="column-add-input" data-boardtitle="${board.title}" value="">
-                                    <button class="save-status-btn btn btn-outline-dark btn-sm board-add" data-boardtitle="${board.title}">Save</button>
+                            <button class="column-add btn btn-outline-dark btn-sm board-add" type="button" data-boardid="${board['public_boards_id']}" data-boardtitle="${board['name']}">Add Column</button>
+                                <span class="column-add-form hidden" data-boardid="${board['public_boards_id']}">
+                                    <input type="text" class="column-add-input" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}" value="">
+                                    <button class="save-status-btn btn btn-outline-dark btn-sm board-add" data-boardtitle="${board['name']}" data-boardid="${board['board_id']}">Save</button>
                                 </span>
-                            <button class="board-toggle btn btn-outline-dark btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" data-boardtitle="${board.title}"><i class="fas fa-chevron-down"></i></button>
-                        </div>
-                        <div class="collapse board-columns" id="collapseExample" data-boardtitle="${board.title}" data-boardid="${board.id}">
+                            <button class="board-delete btn btn-outline-dark btn-sm" type="button"  data-boardid="${board['public_boards_id']}"><i class="fas fa-trash-alt"></i></button>
+                            <button class="board-toggle btn btn-outline-dark btn-sm" type="button"  data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}"><i class="fas fa-chevron-down"></i></button>
+                        </span>
+                        <div class="collapse board-columns hidden" id="collapseExample" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
                         </div>
                     </div>
             </section> 
             `;
+            console.log(board['public_boards_id'])
         }
-
+            // <div class="container">
+            //     ${boardList}
+            // </div>
         const outerHtml = `
-            <ul class="container">
-                ${boardList}
-            </ul>
+            <section id="boards">
+            ${boardList}
+            </section>
         `;
 
         let boardsContainer = document.querySelector('#boards');
         boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
-    },
-
-
-    loadColumns: function (boardId) {
-        // retrieves cards and makes showCards called
-        dataHandler.getCardsByBoardId(boardId,function(cards)
-        {
-            dom.showColumns(cards);
-        });
-    },
-    showColumns: function (columns) {
-        // shows the cards of a board
-        // it adds necessary event listeners also
     },
 
 
@@ -106,11 +107,17 @@ export let dom = {
         // shows the cards of a board
         // it adds necessary event listeners also
         for (let card of cards) {
-            let statusName = card.column_name
+            let statusName = card.column
             let boardId = card.board_id
-            let column = document.querySelector(`.board-column-content[data-boardid="${boardId}"][data-statustitle="${statusName}"]`)
+            let column = document.querySelector(`.board-column-content[data-boardid="${boardId}"][data-statustitle="${status['name']}"]`)
             let cardsHTML  = column.innerHTML
-            cardsHTML += `<div class="card">${card.title}</div>`
+            cardsHTML += `<div class="card">
+                              <div class="card-content">
+                                  <div class="card-title">${card['name']}</div>
+                                  <div class="card-archive"><i class="fas fa-archive"></i></div>
+                                  <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
+                              </div>
+                          </div>`
             column.innerHTML = cardsHTML
         }
     },
@@ -141,8 +148,10 @@ export let dom = {
                 let renameBoardBtns = document.querySelectorAll('.save-boardname-btn')
                 for (let renameBoardBtn of renameBoardBtns) {
                     renameBoardBtn.addEventListener('click', () => {
+                        let boardId = renameBoardBtn.dataset.boardid;
+                        console.log(boardId)
                         let new_board_title = document.querySelector(`[data-oldtitle='${old_board_title}']`).value;
-                        dataHandler.renameBoard(old_board_title, new_board_title, function (response) {
+                        dataHandler.updateBoard(new_board_title, boardId, function (response) {
                             dom.loadBoards();
                         })
                     })
@@ -153,6 +162,12 @@ export let dom = {
         let dropDownBtns = document.querySelectorAll('.board-toggle')
         for (let dropDownBtn of dropDownBtns) {
             dropDownBtn.addEventListener('click', function () {
+                let boardTitle = dropDownBtn.dataset.boardtitle;
+
+                let boardColumns = document.querySelectorAll(`.board-columns[data-boardtitle="${boardTitle}"]`);
+                for (let boardColumn of boardColumns) {
+                    boardColumn.classList.toggle('hidden');
+                }
                 if (dropDownBtn.firstElementChild.classList.contains('fa-chevron-down')) {
                     dropDownBtn.firstElementChild.classList.remove('fa-chevron-down');
                     dropDownBtn.firstElementChild.classList.add('fa-chevron-up');
@@ -166,20 +181,19 @@ export let dom = {
         let addNewColumnBtns = document.querySelectorAll('.column-add')
         for (let addNewColumnBtn of addNewColumnBtns) {
             addNewColumnBtn.addEventListener('click', function () {
-                let boardTitle = addNewColumnBtn.dataset.boardtitle;
-                let newColumnInputs = document.querySelectorAll(`.column-add-form[data-boardtitle="${boardTitle}"]`);
-                for (let newColumnInput of newColumnInputs) {
-                    newColumnInput.classList.toggle('hidden')
-                }
+                let boardId = addNewColumnBtn.dataset.boardid;
+                let newColumnInput = document.querySelector(`.column-add-form[data-boardid="${boardId}"]`);
+                newColumnInput.classList.toggle('hidden')
+
             })
         }
-        // Saving title of the column
+        // Saving title of the new column
         let saveNewStatusBtns = document.querySelectorAll('.save-status-btn');
         for (let saveNewStatusBtn of saveNewStatusBtns) {
             let boardTitle = saveNewStatusBtn.dataset.boardtitle
             saveNewStatusBtn.addEventListener('click', function () {
                 let newStatusName = document.querySelector(`.column-add-input[data-boardtitle="${boardTitle}"]`).value
-                dataHandler.addStatus(newStatusName, boardTitle, function (response) {
+                dataHandler.createNewStatus(newStatusName, boardTitle, function (response) {
                     dom.loadStatuses();
                 })
             })
@@ -189,29 +203,57 @@ export let dom = {
         for (let button of addCardBtns) {
             let boardTitle = button.dataset.boardtitle
             let boardId = button.dataset.boardid
-            let cardInput = document.querySelector(`.card-add-form[data-boardtitle="${boardTitle}"]`)
+            let cardInput = document.querySelector(`.card-add-form[data-boardid="${boardId}"]`)
             button.addEventListener('click' , function(){
                 cardInput.classList.toggle('hidden')
             })
-            //Saving the content of the Card when clicking on Enter
-            cardInput.addEventListener('keyup', function(e) {
-                if(e.keyCode === 13) {
-                    cardInput.classList.toggle('hidden')
-                    let cardTitle = document.querySelector(`.card-add-input[data-boardtitle="${boardTitle}"]`).value
-                    let statusName = document.querySelector(`.board-column-content[data-boardtitle="${boardTitle}"]`).dataset.statustitle
-                    dataHandler.createNewCard(cardTitle, boardId, statusName, function(response){
-                    })
-                    dom.loadStatuses()
-                }
-            })
+            //Saving the content of the new Card when clicking Save
+            let saveNewCardBtns = document.querySelectorAll('.card-save-btn');
+        for (let saveNewCardBtn of saveNewCardBtns) {
+            let boardId = saveNewCardBtn.dataset.boardid
+            // for (status of statuses) {
+            //     let firstColumnId = statuses[status[0]] //DO ZROBIENIA TO DO okreslic statuses
+            // }
 
+            saveNewCardBtn.addEventListener('click', function () {
+                let newCardName = document.querySelector(`.card-add-input[data-boardid="${boardId}"]`).value
+                dataHandler.createNewCard(newCardName, boardTitle, statusId, function (response) {
+                    dom.loadStatuses();
+                })
+            })
+        }
+            //this is for updating/changing card content, but not totally done yet
+        //     cardInput.addEventListener('keyup', function(e) {
+        //         if(e.keyCode === 13) {
+        //             cardInput.classList.toggle('hidden')
+        //             let cardTitle = document.querySelector(`.card-add-input[data-boardid="${boardId}"]`).value
+        //             let statusName = document.querySelector(`.board-column-content[data-boardid="${boardId}"]`).dataset.statustitle
+        //             dataHandler.createNewCard(cardTitle, boardId, statusName, function(response){
+        //                 dom.loadStatuses()
+        //             })
+        //         //leaving old content when clicking Escape
+        //         } else if (e.keyCode === 27) {
+        //             cardInput.innerHTML = oldCardTitle
+        //         }
+        //     })
+        //
+        }
+        //Delete Board by clicking on trash icon
+        let deleteBoardBtns = document.querySelectorAll('.board-delete');
+        for (let deleteBoardBtn of deleteBoardBtns) {
+            deleteBoardBtn.addEventListener('click', function (event) {
+                let boardId = deleteBoardBtn.dataset.boardid
+                dataHandler.deleteBoard(boardId, function() {
+                    this.loadBoards()
+                })
+            })
         }
 
     },
 
     //Changing the title of the column
     buttonHandlerColumns: function () {
-        let columnTitles = document.querySelectorAll('.board-column-title')
+        let columnTitles = document.querySelectorAll('.column-name')
         for (let columnTitle of columnTitles) {
             let boardTitle = columnTitle.dataset.boardtitle
             //Changing into input on double clicking
@@ -223,7 +265,7 @@ export let dom = {
                     //updating the title when clicking Enter
                     if (event.keyCode === 13) {
                         let newColumnTitle = inputField.value
-                        dataHandler.renameColumn(oldColumnTitle, newColumnTitle, boardTitle, function (response) {
+                        dataHandler.updateStatus(oldColumnTitle, newColumnTitle, boardTitle, function (response) {
                             dom.loadStatuses();
                         })
                         //leaving old title when clicking Escape
@@ -237,6 +279,7 @@ export let dom = {
     // here comes more features, to do list:
     // add updating cards, or not really??
     //add DELETING everything when clicking on favicon trash
+    // add ARCHIVING cards
     // add drag and drop and updating
     // private boards vs public boards
 };
