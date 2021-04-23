@@ -40,7 +40,7 @@ export let dom = {
                                         <text class="column-name" data-boardtitle="${boardTitle}">${status['name']}</text>
                                         <button class="column-remove"><i class="fas fa-trash-alt"></i></button>
                                         </div>
-                                        <div class="board-column-content" data-boardid="${boardId}" data-statustitle="${status['name']}" data-statusid="${status['id']}">></div>
+                                        <div class="board-column-content" data-boardid="${boardId}" data-statustitle="${status['name']}" data-statusid="${status['public_column_id']}"></div>
                                         </div>`
                 }
             }
@@ -56,7 +56,7 @@ export let dom = {
         for(let board of boards)
         {
             boardList += `
-                <section class="board" data-boardid="${board['public_boards_id']}>
+                <section class="board" data-boardid="${board['public_boards_id']}">
                     <div class="board-header"><span class="board-title" data-boardid="${board['public_boards_id']}">${board['name']}</span>
                         
 
@@ -108,9 +108,9 @@ export let dom = {
         // shows the cards of a board
         // it adds necessary event listeners also
         for (let card of cards) {
-            let statusName = card.column
+            let statusName = card.s
             let boardId = card.board_id
-            let column = document.querySelector(`.board-column-content[data-boardid="${boardId}"][data-statustitle="${status['name']}"]`)
+            let column = document.querySelector(`.board-column-content[data-boardid="${boardId}"][data-statustitle="${column['name']}"]`)
             let cardsHTML  = column.innerHTML
             cardsHTML += `<div class="card">
                               <div class="card-content">
@@ -208,7 +208,6 @@ export let dom = {
         //Adding new card when clickin on button Add Card
         let addCardBtns = document.querySelectorAll('.card-add')
         for (let button of addCardBtns) {
-            let boardTitle = button.dataset.boardtitle
             let boardId = button.dataset.boardid
             let cardInput = document.querySelector(`.card-add-form[data-boardid="${boardId}"]`)
             button.addEventListener('click' , function(){
@@ -218,13 +217,14 @@ export let dom = {
             let saveNewCardBtns = document.querySelectorAll('.card-save-btn');
         for (let saveNewCardBtn of saveNewCardBtns) {
             let boardId = saveNewCardBtn.dataset.boardid
+            let statuses = document.querySelector()
             // for (status of statuses) {
             //     let firstColumnId = statuses[status[0]] //DO ZROBIENIA TO DO okreslic statuses
             // }
 
             saveNewCardBtn.addEventListener('click', function () {
                 let newCardName = document.querySelector(`.card-add-input[data-boardid="${boardId}"]`).value
-                dataHandler.createNewCard(newCardName, boardTitle, statusId, function (response) {
+                dataHandler.createNewCard(newCardName, statusId, function (response) {
                     dom.loadStatuses();
                 })
             })
