@@ -38,7 +38,6 @@ def user_register():
     """
     Register a new user and store credentials in a database
     Returns OK if successful or user id
-
     TODO checking if user already exists
     TODO data validation
     """
@@ -60,9 +59,7 @@ def user_login():
     Returns session id
     TODO check if session already exists and don't generate new
     TODO garbage collector for expired sessions
-
     there is verify session for checking tokens
-
     """
 
     login, password = request.json['login'], request.json['password']
@@ -79,6 +76,7 @@ def get_boards():
     """
     All the boards
     """
+
     return data_handler.get_boards()
 
 
@@ -195,8 +193,9 @@ def get_columns_for_board(board_id: int):
     All columns that belongs to a board
     :param board_id: id of the parent board
     """
-
+    print(board_id)
     fetched_columns = data_handler.get_columns_for_board(board_id=board_id)
+
 
     return fetched_columns
 

@@ -204,9 +204,9 @@ export let dataHandler = {
         // });
     },
 
-    createNewStatus: function (boardTitle, boardId, callback)
+    createNewStatus: function (columnTitle, boardId, callback)
     {
-        let newColumnData = { "name": boardTitle, "board_id": boardId }
+        let newColumnData = { "name": columnTitle, "board_id": boardId }
         // creates new board, saves it and calls the callback function with its data
         this._api_post('/boards/public/columns', newColumnData, (response) => {
             callback(response);

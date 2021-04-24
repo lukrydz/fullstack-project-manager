@@ -339,6 +339,7 @@ def delete_board(cursor, board_id):
     query = """
                DELETE FROM public_boards
                WHERE public_boards_id = %(board_id)s
+               RETURNING %(board_id)s
     """
     cursor.execute(query, {'board_id': board_id})
 
@@ -405,4 +406,3 @@ def get_cards_for_board_private(cursor, board_id):
     cursor.execute(query, {'board_id': board_id})
 
     return cursor.fetchall()
-
