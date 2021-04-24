@@ -22,6 +22,7 @@ def get_boards(cursor):
 
     query = """
                     SELECT * FROM public_boards
+                    ORDER BY public_boards_id DESC
             """
     cursor.execute(query)
 
@@ -330,6 +331,7 @@ def update_column_private(cursor, name, column_id):
     cursor.execute(query, {'name': name, 'column_id': column_id})
 
     return cursor.fetchone()
+
 
 @connection.connection_handler
 def delete_board(cursor, board_id):
