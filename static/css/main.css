@@ -42,7 +42,7 @@ body{
 .add-board-button {
     background-color: whitesmoke;
     color: black;
-    margin: 13px auto 6px;
+    margin: 13px auto 0;
 }
 
 /* LOGIN Page */
@@ -118,7 +118,7 @@ button{
 }
 
 .board-header{
-    height: 50px;
+    display: flex;
     background: #fff;
     border-radius: var(--border-radius) var(--border-radius) 0 0;
     margin: 0 auto 0;
@@ -130,10 +130,10 @@ button{
     display: inline-block;
     font-size: 20px;
 }
-.board-title, .board-add, .board-delete, .board-toggle, .column-remove, .column-add, .save-status-btn, .card-save-btn, #new-board-title, .save-boardname-btn{
+.board-title, .board-add, .board-delete, .board-toggle, .column-remove, .save-status-btn, .card-save-btn, #new-board-title, .save-boardname-btn{
     display: inline-block;
     border-radius: 0.6rem;
-    margin-bottom: 0.6rem;
+    /*margin-bottom: 0.6rem;*/
 }
 
 .column-remove {
@@ -146,7 +146,7 @@ button{
 
 .board-delete, .board-toggle {
     float: right;
-    margin: 7px;
+    /*margin: 7px;*/
 }
 
 
@@ -227,9 +227,6 @@ button{
 
 }
 
-.hidden {
-    display: none;
-}
 
 .new-board-container {
     margin: 13px 20px 6px;
@@ -244,4 +241,16 @@ button{
     flex-wrap: wrap;
     align-content: center;
 
+}
+
+.board-specific {
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+
+}
+
+
+.hidden {
+    display: none;
 }

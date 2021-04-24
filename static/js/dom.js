@@ -13,7 +13,7 @@ export let dom = {
         dataHandler.getBoards(function(boards)
         {
             dom.showBoards(boards);
-            // dom.buttonHandler();
+            dom.buttonHandler();
 
             for (let board of boards)
             {
@@ -57,7 +57,7 @@ export let dom = {
             boardList += `
                 <section class="board" data-boardid="${board['public_boards_id']}">
                     <div class="board-header"><span class="board-title" data-boardid="${board['public_boards_id']}">${board['name']}</span>
-                        <span class="board-specific " data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
+                        <div class="board-specific ml-auto" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
                             <button class="card-add btn btn-outline-dark btn-sm board-add" type="button" data-boardid="${board['public_boards_id']}" data-boardtitle="${board['name']}">Add Card</button>
                                 <span class="card-add-form hidden" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
                                     <input type="text" class="card-add-input" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}" value="">
@@ -70,7 +70,7 @@ export let dom = {
                                 </span>
                             <button class="board-delete btn btn-outline-dark btn-sm" type="button"  data-boardid="${board['public_boards_id']}"><i class="fas fa-trash-alt"></i></button>
                             <button class="board-toggle btn btn-outline-dark btn-sm" type="button"  data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}"><i class="fas fa-chevron-down"></i></button>
-                        </span>
+                        </div>
                     </div>
                     <div class=" board-columns hidden" id="board-columns${board['public_boards_id']}" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
                     </div>
@@ -171,14 +171,15 @@ export let dom = {
         }
         //changing the collapse button image on click depending if content is hidden or not
         let dropDownBtns = document.querySelectorAll('.board-toggle')
+        console.log(dropDownBtns);
         for (let dropDownBtn of dropDownBtns) {
             dropDownBtn.addEventListener('click', function () {
-                let boardTitle = dropDownBtn.dataset.boardtitle;
+                let boardid = dropDownBtn.dataset.boardid;
 
-                let boardColumns = document.querySelectorAll(`.board-columns[data-boardtitle="${boardTitle}"]`);
-                for (let boardColumn of boardColumns) {
-                    boardColumn.classList.toggle('hidden');
-                }
+                let boardColumn = document.querySelector(`.board-columns[data-boardid="${boardid}"]`);
+
+                boardColumn.classList.toggle('hidden');
+
                 if (dropDownBtn.firstElementChild.classList.contains('fa-chevron-down')) {
                     dropDownBtn.firstElementChild.classList.remove('fa-chevron-down');
                     dropDownBtn.firstElementChild.classList.add('fa-chevron-up');
