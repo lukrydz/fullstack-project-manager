@@ -153,6 +153,7 @@ button{
 .board-column{
     padding: 10px;
     flex: 1;
+    max-width: 25%;
 }
 
 
