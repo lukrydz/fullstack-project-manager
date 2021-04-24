@@ -130,10 +130,19 @@ button{
     display: inline-block;
     font-size: 20px;
 }
-.board-title, .board-add, .board-delete, .board-toggle, .column-remove, .save-status-btn, .card-save-btn, #new-board-title, .save-boardname-btn{
-    display: inline-block;
+.board-title, .board-delete, .board-toggle, .column-remove, .save-status-btn, .card-save-btn, #new-board-title, .save-boardname-btn {
     border-radius: 0.6rem;
-    /*margin-bottom: 0.6rem;*/
+}
+
+input.column-add-input, input.card-add-input {
+    border: 1px solid;
+    border-radius: 0.5rem;
+    margin-bottom: 0.8rem;
+
+}
+.board-add {
+    border-radius: 0.6rem;
+    margin-bottom: 0.6rem;
 }
 
 .column-remove {
@@ -248,10 +257,20 @@ button{
     flex-wrap: wrap;
     justify-content: center;
     align-content: center;
+    padding-top: 11px;
 
 }
 
 
 .hidden {
     display: none;
+}
+
+.board-toggle{
+    margin-left: 5px;
+    margin-right: 4px;
+}
+
+.board-delete {
+    margin-right: 4px;
 }
