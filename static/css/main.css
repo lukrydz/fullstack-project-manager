@@ -15,8 +15,13 @@ body{
     
 }
 
-.boards {
-    display: flex;
+
+.board {
+    border: solid 1px #eee;
+    border-radius: 5px;
+    margin: 15px 0 15px;
+    background: #ffffff90;
+
 }
 /* NAVBAR */
 
@@ -103,12 +108,12 @@ button{
 
 .container {
     margin: 0 auto;
+    background-color: #eeebdd;
 }
 
 #boards{
     margin: 20px;
-    border: aliceblue;
-    background: #ffffff90;
+    background: #eeebdd;
     border-radius: 3px;
 }
 
@@ -116,7 +121,7 @@ button{
     height: 50px;
     background: #fff;
     border-radius: var(--border-radius) var(--border-radius) 0 0;
-    margin: 20px auto;
+    margin: 0 auto 0;
 
 }
 
@@ -218,6 +223,8 @@ button{
 .card-icons {
     width:fit-content;
     height:fit-content;
+
+
 }
 
 .hidden {

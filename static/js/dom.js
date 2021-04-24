@@ -63,7 +63,7 @@ export let dom = {
                                     <input type="text" class="card-add-input" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}" value="">
                                     <button class="card-save-btn btn btn-outline-dark btn-sm board-add" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">Save</button>
                                 </span>
-                            <button class="column-add btn btn-outline-dark btn-sm board-add" type="button" data-boardid="${board['public_boards_id']}" data-boardtitle="${board['name']}">Add Column</button>
+                                <button class="column-add btn btn-outline-dark btn-sm board-add" type="button" data-boardid="${board['public_boards_id']}" data-boardtitle="${board['name']}">Add Column</button>
                                 <span class="column-add-form hidden" data-boardid="${board['public_boards_id']}">
                                     <input type="text" class="column-add-input" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}" value="">
                                     <button class="save-status-btn btn btn-outline-dark btn-sm board-add" data-boardtitle="${board['name']}" data-boardid="${board['board_id']}">Save</button>
@@ -115,7 +115,7 @@ export let dom = {
                 console.log(card['name'])
                 cardsHTML += `<div class="card">
                                       <div class="card-title">${card['name']}</div>
-                                 <div class="card-icons">
+                                 <div class="card-icons ml-auto">
                                       <div class="card-archive"><i class="fas fa-archive"></i></div>
                                       <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
                                   </div>
