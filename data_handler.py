@@ -336,11 +336,12 @@ def delete_board(cursor, board_id):
 
     query = """
                DELETE FROM public_boards
-               WHERE  public_board_id = %(board_id)s
+               WHERE public_boards_id = %(board_id)s
     """
     cursor.execute(query, {'board_id': board_id})
 
     return cursor.fetchone()
+
 
 @connection.connection_handler
 def delete_board_private(cursor, board_id):
