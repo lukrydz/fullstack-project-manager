@@ -13,7 +13,7 @@ export let dom = {
         dataHandler.getBoards(function(boards)
         {
             dom.showBoards(boards);
-            dom.buttonHandler();
+            // dom.buttonHandler();
 
             for (let board of boards)
             {
