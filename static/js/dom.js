@@ -57,8 +57,6 @@ export let dom = {
             boardList += `
                 <section class="board" data-boardid="${board['public_boards_id']}">
                     <div class="board-header"><span class="board-title" data-boardid="${board['public_boards_id']}">${board['name']}</span>
-                        
-
                         <span class="board-specific " data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
                             <button class="card-add btn btn-outline-dark btn-sm board-add" type="button" data-boardid="${board['public_boards_id']}" data-boardtitle="${board['name']}">Add Card</button>
                                 <span class="card-add-form hidden" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
@@ -73,24 +71,17 @@ export let dom = {
                             <button class="board-delete btn btn-outline-dark btn-sm" type="button"  data-boardid="${board['public_boards_id']}"><i class="fas fa-trash-alt"></i></button>
                             <button class="board-toggle btn btn-outline-dark btn-sm" type="button"  data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}"><i class="fas fa-chevron-down"></i></button>
                         </span>
-                        <div class=" board-columns hidden" id="board-columns${board['public_boards_id']}" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
-                        </div>
                     </div>
-            </section> 
+                    <div class=" board-columns hidden" id="board-columns${board['public_boards_id']}" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
+                    </div>
+                    
+                </section> 
             `;
             console.log(board['public_boards_id'])
         }
-            // <div class="container">
-            //     ${boardList}
-            // </div>
-        const outerHtml = `
-            <section id="boards">
-            ${boardList}
-            </section>
-        `;
 
         let boardsContainer = document.querySelector('#boards');
-        boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
+        boardsContainer.innerHTML = boardList;
     },
 
     showColumns: function (boardId, statuses)
@@ -107,15 +98,8 @@ export let dom = {
                                 </div>`
 
         }
-        // boardColumn.innerHTML = boardColumnHTML;
-        const outerLayer = `
-        <div class= "board-columns">
-        ${boardColumnHTML}
-        </div>
-        `;
-
-        let columnsContainer = document.querySelector(`#board-columns${boardId}`);
-        columnsContainer.insertAdjacentHTML("beforeend", outerLayer);
+        let columnsContainer = document.getElementById(`board-columns${boardId}`);
+        columnsContainer.innerHTML = boardColumnHTML;
 
     },
 
@@ -130,22 +114,17 @@ export let dom = {
             {
                 console.log(card['name'])
                 cardsHTML += `<div class="card">
-                                  <div class="card-content">
                                       <div class="card-title">${card['name']}</div>
+                                 <div class="card-icons">
                                       <div class="card-archive"><i class="fas fa-archive"></i></div>
                                       <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
                                   </div>
                               </div>`
             }
         }
-        const outerLayer = `
-        <div class= "card">
-        ${cardsHTML}
-        </div>
-        `;
-
         let cardsContainer = document.querySelector(`#column-cards${status['public_column_id']}`);
-        cardsContainer.insertAdjacentHTML("beforeend", outerLayer);
+        cardsContainer.innerHTML = cardsHTML;
+
     },
 
     // BOARD BUTTONS
