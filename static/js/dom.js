@@ -60,12 +60,12 @@ export let dom = {
                         <div class="board-specific ml-auto" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
                             <button class="card-add btn btn-outline-dark btn-sm board-add" type="button" data-boardid="${board['public_boards_id']}" data-boardtitle="${board['name']}">Add Card</button>
                                 <span class="card-add-form hidden" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
-                                    <input type="text" class="card-add-input" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}" value="">
+                                    <input type="text" class="card-add-input" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}" value="" placeholder="Card content">
                                     <button class="card-save-btn btn btn-outline-dark btn-sm board-add" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">Save</button>
                                 </span>
                                 <button class="column-add btn btn-outline-dark btn-sm board-add" type="button" data-boardid="${board['public_boards_id']}" data-boardtitle="${board['name']}">Add Column</button>
                                 <span class="column-add-form hidden" data-boardid="${board['public_boards_id']}">
-                                    <input type="text" class="column-add-input" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}" value="">
+                                    <input type="text" class="column-add-input" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}" value="" placeholder="Column name">
                                     <button class="save-status-btn btn btn-outline-dark btn-sm board-add" data-boardtitle="${board['name']}" data-boardid="${board['board_id']}">Save</button>
                                 </span>
                             <button class="board-delete btn btn-outline-dark btn-sm" type="button"  data-boardid="${board['public_boards_id']}"><i class="fas fa-trash-alt"></i></button>
