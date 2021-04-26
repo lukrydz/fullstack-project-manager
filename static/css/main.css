@@ -54,6 +54,10 @@ body{
     margin-bottom: 20px;
   }
 
+.border-top {
+    text-align: center;
+}
+
   /* Register Section */
 
   #register-form

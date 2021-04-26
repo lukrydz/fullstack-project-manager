@@ -261,7 +261,7 @@ def update_board_private(cursor, board_id, board_name, archived):
     query = """
                     UPDATE boards
                     SET name = %(name)s, archived = %(archived)s
-                    WHERE boards_id = %(board_id)s
+                    WHERE board_id = %(board_id)s
                     RETURNING *
             """
     cursor.execute(query, {'name': board_name, 'board_id': board_id, 'archived': archived})
@@ -273,7 +273,7 @@ def get_columns_for_board_private(cursor, board_id, user_id):
 
     query = """
                 SELECT * FROM columns
-                WHERE boards_id = %(board_id)s and user_id = %(user_id)s
+                WHERE board_id = %(board_id)s
     """
 
     cursor.execute(query, {'board_id': board_id, 'user_id': user_id})
@@ -298,8 +298,8 @@ def update_card_private(cursor, card_id, card_name, card_column, card_order, arc
 
     query = """
                     UPDATE cards
-                    SET name = %(name)s, public_column_id = %(column)s, "order" = %(order)s, archived = %(archived)s
-                    WHERE public_cards_id = %(card_id)s
+                    SET name = %(name)s, column_id = %(column)s, "order" = %(order)s, archived = %(archived)s
+                    WHERE card_id = %(card_id)s
                     RETURNING *
             """
     cursor.execute(query, {'card_id': card_id, 'name': card_name, 'column': card_column, 'order': card_order, 'archived': archived})
@@ -323,9 +323,9 @@ def update_column(cursor, name, column_id):
 def update_column_private(cursor, name, column_id):
 
     query = """
-                    UPDATE public_collumns
+                    UPDATE columns
                     SET name = %(name)s
-                    WHERE public_column_id = %(column_id)s
+                    WHERE column_id = %(column_id)s
                     RETURNING *
             """
     cursor.execute(query, {'name': name, 'column_id': column_id})
@@ -387,7 +387,7 @@ def delete_card(cursor, card_id):
 def delete_card_private(cursor, card_id):
     query = """
             DELETE FROM cards
-            WHERE cards_id = %(card_id)s
+            WHERE card_id = %(card_id)s
     """
     cursor.execute(query, {'card_id': card_id})
 
@@ -396,7 +396,7 @@ def delete_card_private(cursor, card_id):
 def get_cards_for_board_private(cursor, board_id):
 
     query = """
-                SELECT cards_id, cards.name, columns.name as column, "order" FROM cards
+                SELECT card_id, cards.name, columns.name as column, "order" FROM cards
                 INNER JOIN columns on columns.column_id = cards.column_id
                 INNER JOIN boards on columns.board_id = boards.board_id
                 WHERE board_id = %(board_id)s

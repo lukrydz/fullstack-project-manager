@@ -291,10 +291,6 @@ export let dom = {
 
 
 
-
-
-
-
      // COLUMN BUTTONS
     //Changing the title of the column
 
