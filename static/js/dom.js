@@ -96,7 +96,8 @@ export let dom = {
                                 <text class="column-name" data-statusid="${status['public_column_id']}">${status['name']}</text>
                                 <button class="column-remove" data-statusid="${status['public_column_id']}"><i class="fas fa-trash-alt"></i></button>
                                 </div>
-                                <div class="board-column-content" id="column-cards${status['public_column_id']}" data-statustitle="${status['name']}" data-statusid="${status['public_column_id']}"></div>
+                                <div class="board-column-content" id="column-cards${status['public_column_id']}" data-statustitle="${status['name']}" data-statusid="${status['public_column_id']}">
+                                </div>
                                 </div>`
 
         }
