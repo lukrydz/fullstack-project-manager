@@ -15,7 +15,7 @@ export let dataHandler = {
             credentials: 'same-origin'
         })
         .then(response => response.json())  // parse the response as JSON
-        .then(json_response => callback(json_response));  // Call the `callback` with the returned object
+        .then(json_response => callback(json_response))  // Call the `callback` with the returned object
     },
     _api_post: function (url, data, callback)
     {
@@ -34,6 +34,7 @@ export let dataHandler = {
         .then(json_response => callback(json_response));  // Call the `callback` with the returned object
         // .catch(function(err) {console.log(err)});
     },
+
     _api_put: function (url, data, callback)
     {
         // it is not called from outside
@@ -68,16 +69,34 @@ export let dataHandler = {
 
     },
 
+    setTokenCookie: function (token) {
+        console.log('token: ', token)
+        document.cookie = `token=${token}`;
+        window.location.href = '/'
+    },
+
+    getTokenFromCookie: function() {
+        const cookies = Object.fromEntries(document.cookie.split(/; */).map(cookie => cookie.split('=', 2)))
+        if (cookies['token']) {
+            console.log('found token!', cookies['token'])
+            return cookies['token']
+        } else {
+            console.log('token not found!')
+        }
+    },
+
 
     ///  USER PART  ///
 
 
     loginUser: function (userLogin, userPassword, callback)
     {
+        console.log('Login function begins')
         let userData = { 'login': userLogin, 'password': userPassword }
 
         // creates new card, saves it and calls the callback function with token
         this._api_post('/login', userData,(response) => {
+            console.log('Got API login response')
             callback(response);
         });
     },
@@ -145,7 +164,7 @@ export let dataHandler = {
         // the boards are retrieved and then the callback function is called with the boards
         // Here we use an arrow function to keep the value of 'this' on dataHandler.
         //    if we would use function(){...} here, the value of 'this' would change.
-        this._api_get('/boards/private', (response) => {
+        this._api_get(`/boards/private?token=${this.getTokenFromCookie()}`,(response) => {
             callback(response);
         });
     },
@@ -156,11 +175,16 @@ export let dataHandler = {
         // this._api_get(`/boards/public/${boardId}`, (response) => {
         //     callback(response);
         // });
+
+        let token = this.getTokenFromCookie()
+        this._api_get_token('/boards/public/${boardId}', token,(response) => {
+            callback(response);
+        });
     },
 
     createNewBoardPrivate: function (boardTitle, callback)
     {
-        let newBoardData = { "name": boardTitle }
+        let newBoardData = { "name": boardTitle, 'token': this.getTokenFromCookie() }
         // creates new board, saves it and calls the callback function with its data
         this._api_post('/boards/private', newBoardData, (response) => {
             callback(response);
@@ -169,7 +193,7 @@ export let dataHandler = {
 
     updateBoardPrivate: function (boardTitle, boardId, archived, callback)
     {
-        let updatedBoardData = { "name": boardTitle, "id": boardId, "archived": archived }
+        let updatedBoardData = { "token": this.getTokenFromCookie(), "name": boardTitle, "id": boardId, "archived": archived }
         // creates new board, saves it and calls the callback function with its data
         this._api_put('/boards/private', updatedBoardData, (response) => {
             callback(response);

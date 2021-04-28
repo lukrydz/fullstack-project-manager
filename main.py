@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, jsonify, request
+from flask import Flask, render_template, url_for, jsonify, request, redirect, make_response
 from util import json_response
 import data_handler
 
@@ -11,6 +11,7 @@ app = Flask(__name__)
 
 
 @app.route("/")
+@app.route("/index")
 def index():
     """
     This is a one-pager which shows all the boards and cards
@@ -41,15 +42,14 @@ def user_register():
     TODO checking if user already exists
     TODO data validation
     """
+    login, password = request.form['email'], request.form['password']
 
-    login, password = request.json['login'], request.json['password']
     registered = False
 
     if login and password:
         registered = data_handler.user_register(login, password)
 
-    return jsonify(success=registered)
-
+    return redirect('index')
 
 
 @app.route("/login", methods=['POST'])
@@ -62,12 +62,15 @@ def user_login():
     there is verify session for checking tokens
     """
 
-    login, password = request.json['login'], request.json['password']
+    # login, password = request.json['login'], request.json['password']
+    login, password = request.form['login'], request.form['password']
 
     if data_handler.check_credentials(login, password):
-        return jsonify({'token': data_handler.open_session(login)})
+        res = make_response(redirect('index'))
+        res.set_cookie("token", value=data_handler.open_session(login))
+        return res
     else:
-        return jsonify({'msg': 'Invalid credentials.'})
+        return redirect('login')
 
 
 @app.route("/boards/public", methods=['GET'])
@@ -87,8 +90,8 @@ def create_board():
     """
 
     board_name = request.json['name']
-    print(board_name)
     created_id = data_handler.create_board(name=board_name)['id']
+    print(board_name, created_id)
 
     if created_id:
         return jsonify({'id': created_id})
@@ -141,6 +144,7 @@ def new_card():
 
     return added_card_id
 
+
 @app.route("/boards/public/columns", methods=['PUT'])
 @json_response
 def update_column():
@@ -149,6 +153,7 @@ def update_column():
     column_id = request.json['column_id']
 
     updated_column_id = data_handler.update_column(name=name,column_id=column_id )
+
 
 @app.route("/boards/public/cards", methods=['PUT'])
 @json_response
@@ -196,18 +201,17 @@ def get_columns_for_board(board_id: int):
     print(board_id)
     fetched_columns = data_handler.get_columns_for_board(board_id=board_id)
 
-
     return fetched_columns
 
 
 @app.route("/boards/private", methods=['GET'])
 @json_response
-def get_boards_private(user_id):
+def get_boards_private():
     """
     All the boards
     """
 
-    user_id = data_handler.verify_session(request.json['token'])
+    user_id = data_handler.verify_session(request.args['token'])
 
     if user_id:
         return data_handler.get_boards_private(user_id=user_id)
@@ -219,7 +223,7 @@ def create_board_private():
     Create boards
     """
 
-    user_id = data_handler.verify_session(request.json['token'])
+    user_id = data_handler.verify_session(request.args['token'])
 
     if not user_id:
         return {'msg': 'Session fault.'}
@@ -242,6 +246,11 @@ def update_board_private():
     TODO handle multi-element request
     """
 
+    user_id = data_handler.verify_session(request.args['token'])
+
+    if not user_id:
+        return {'Auth failed'}
+
     board_id = request.json['id']
     board_name = request.json['name']
     archived = request.json['archived']
@@ -257,6 +266,11 @@ def new_card_private():
     Add new card to the database
     """
 
+    user_id = data_handler.verify_session(request.args['token'])
+
+    if not user_id:
+        return {'Auth failed'}
+
     # name, column_id, order
 
     card_name = request.json['name']
@@ -269,6 +283,7 @@ def new_card_private():
 
     return added_card_id
 
+
 @app.route("/boards/private/<int:board_id>/columns")
 @json_response
 def get_columns_for_board_private(board_id: int):
@@ -276,10 +291,17 @@ def get_columns_for_board_private(board_id: int):
     All columns that belongs to a board
     :param board_id: id of the parent board
     """
-    user_id = request.json['user_id']
+
+    user_id = data_handler.verify_session(request.args['token'])
+
+    if not user_id:
+        return {'Auth failed'}
+
+    # user_id = request.json['user_id']
     fetched_columns = data_handler.get_columns_for_board(board_id=board_id, user_id=user_id)
 
     return fetched_columns
+
 
 @app.route("/boards/private/cards", methods=['PUT'])
 @json_response
@@ -287,6 +309,11 @@ def update_card_private():
     """
     Update card to the database
     """
+
+    user_id = data_handler.verify_session(request.args['token'])
+
+    if not user_id:
+        return {'Auth failed'}
 
     # name, public_column_id, order
 
@@ -299,6 +326,7 @@ def update_card_private():
     updated_card_id = data_handler.update_card(card_id=card_id, card_name=card_name, card_column=card_column, card_order=card_order, archived=archived)
 
     return updated_card_id
+
 
 @app.route("/boards/private/<int:board_id>/")
 @json_response
@@ -327,6 +355,7 @@ def delete_board_private(board_id: int):
 
     return deleted_board
 
+
 @app.route("/columns/public/delete/<int:column_id>/", methods=['DELETE'])
 def delete_column(column_id:int):
     deleted_column = data_handler.delete_column(column_id)
@@ -340,12 +369,14 @@ def delete_column_private(column_id: int):
 
     return deleted_column
 
+
 @app.route("/cards/public/delete/<int:card_id>", methods=['DELETE'])
 def delete_card(card_id: int):
 
     deleted_card = data_handler.delete_card(card_id)
 
     return deleted_card
+
 
 @app.route("/column/private/update", methods=['PUT'])
 def update_column_private():

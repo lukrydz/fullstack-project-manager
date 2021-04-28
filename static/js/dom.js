@@ -6,24 +6,37 @@ export let dom = {
     {
         // This function should run once, when the page is loaded.
         this.buttonHandlerInit();
+        dataHandler.getTokenFromCookie();
 
     },
 
     loadBoards: function ()
     {
         // retrieves boards and makes showBoards called
-        dataHandler.getBoards(function(boards)
-        {
+        dataHandler.getBoards(function(boards) {
 
             dom.showBoards(boards);
             dom.addButtonHandlerToBoards();
 
 
-            for (let board of boards)
-            {
+            for (let board of boards) {
                 let boardId = board['public_boards_id']
                 dom.loadStatuses(boardId);
             }
+        });
+
+        dataHandler.getBoardsPrivate(function(boards)
+        {
+
+            // dom.showBoards(boards);
+            // dom.addButtonHandlerToBoards();
+            //
+            //
+            // for (let board of boards)
+            // {
+            //     let boardId = board['boards_id']
+            //     dom.loadStatuses(boardId);
+            // }
         });
     },
 
@@ -134,6 +147,16 @@ export let dom = {
     // INIT BUTTONS
     buttonHandlerInit: function ()
     {
+        // user login section
+        if (window.location.href.indexOf("login") > -1) {
+            let loginBtn = document.querySelector('#loginbutton');
+            let userLogin = document.querySelector('exampleInputEmail1');
+            let userPassword = document.querySelector('exampleInputPassword1');
+            loginBtn.addEventListener('click', function () {
+                dataHandler.loginUser(userLogin, userPassword, dataHandler.setTokenCookie)
+            });
+        }
+
         // New Board Add Button
         let saveNewBoardBtn = document.querySelector('#save-newboard-btn');
         let newBoardDiv = document.querySelector('.new-board-input');
