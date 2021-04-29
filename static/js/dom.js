@@ -6,7 +6,7 @@ export let dom = {
     {
         // This function should run once, when the page is loaded.
         this.buttonHandlerInit();
-        dataHandler.getTokenFromCookie();
+       dataHandler.getTokenFromCookie();
 
     },
 
@@ -268,15 +268,26 @@ export let dom = {
             for (let saveNewCardBtn of saveNewCardBtns)
             {
                 let boardId = saveNewCardBtn.dataset.boardid
-                // let statuses = document.querySelector()
-                // for (status of statuses) {
-                //     let firstColumnId = statuses[status[0]] //DO ZROBIENIA TO DO okreslic statuses
-                // }
+                let firstColumnId = null;
+                 let statuses = document.querySelectorAll('.board-column');
+                    for (let i = 0; i<statuses.length;i++) {
+                        let currentColumnId = statuses[i].getAttribute('data-statusid');
+                        if (firstColumnId === null){
+                        firstColumnId = currentColumnId;
+                      }
+                      else {
+                        if (currentColumnId < firstColumnId) {
+                          firstColumnId = currentColumnId;
+                        }
+                      }
+                    }
+
 
                 saveNewCardBtn.addEventListener('click', function ()
                 {
                 let newCardName = document.querySelector(`.card-add-input[data-boardid="${boardId}"]`).value
-                dataHandler.createNewCard(newCardName, firstColumnId, function (response) {
+                    console.log(newCardName)
+                    dataHandler.createNewCard(newCardName, firstColumnId, function (response) {
                     dom.loadStatuses();
                     })
                 })

@@ -138,9 +138,9 @@ def new_card():
 
     card_name = request.json['name']
     card_column = request.json['column']
-    card_order = request.json['order']
 
-    added_card_id = data_handler.new_card(card_name=card_name, card_column=card_column, card_order=card_order)
+
+    added_card_id = data_handler.new_card(card_name=card_name, card_column=card_column)
 
     return added_card_id
 
@@ -395,6 +395,7 @@ def delete_card_private(card_id: int):
     deleted_card = data_handler.delete_card_private(card_id)
 
     return deleted_card
+
 
 
 def main():
