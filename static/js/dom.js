@@ -68,37 +68,118 @@ export let dom = {
         // shows boards appending them to #boards div
         // it adds necessary event listeners also
 
-        let boardList = '';
+        // let boardList = '';
         //if (boards != null)
+
+        let boardsContainer = document.querySelector('#boards');
+
         for (let i = 0; i < boards.length; i++)
         {
             let board = boards[i];
-            boardList += `
-                <section class="board" data-boardid="${board['public_boards_id']}">
-                    <div class="board-header"><span class="board-title" data-boardid="${board['public_boards_id']}">${board['name']}</span>
-                        <div class="board-specific ml-auto" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
-                            <button class="card-add btn btn-outline-dark btn-sm board-add" type="button" data-boardid="${board['public_boards_id']}" data-boardtitle="${board['name']}">Add Card</button>
-                                <span class="card-add-form hidden" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
-                                    <input type="text" class="card-add-input" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}" value="" placeholder="Card content">
-                                    <button class="card-save-btn btn btn-outline-dark btn-sm board-add" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">Save</button>
-                                </span>
-                                <button class="column-add btn btn-outline-dark btn-sm board-add" type="button" data-boardid="${board['public_boards_id']}" data-boardtitle="${board['name']}">Add Column</button>
-                                <span class="column-add-form hidden" data-boardid="${board['public_boards_id']}">
-                                    <input type="text" class="column-add-input" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}" value="" placeholder="Column name">
-                                    <button class="save-status-btn btn btn-outline-dark btn-sm board-add" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">Save</button>
-                                </span>
-                            <button class="board-delete btn btn-outline-dark btn-sm" type="button"  data-boardid="${board['public_boards_id']}"><i class="fas fa-trash-alt"></i></button>
-                            <button class="board-toggle btn btn-outline-dark btn-sm" type="button"  data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}"><i class="fas fa-chevron-down"></i></button>
-                        </div>
-                    </div>
-                    <div class=" board-columns hidden" id="board-columns${board['public_boards_id']}" data-boardtitle="${board['name']}" data-boardid="${board['public_boards_id']}">
-                    </div>
-                </section> 
-            `;
+
+            let DOMboard = document.createElement('section')
+            DOMboard.classList.add('board')
+            DOMboard.setAttribute('data-boardid', board['public_boards_id'])
+
+            let DOMheader = document.createElement('div')
+            DOMheader.classList.add('board-header')
+
+            let HeaderSpan = document.createElement('span')
+            HeaderSpan.classList.add('board-title')
+            HeaderSpan.setAttribute('data-boardid', board['public_boards_id'])
+            HeaderSpan.innerText = board['name']
+
+            let DOMbuttons = document.createElement('div')
+            DOMbuttons.classList.add('board-specific', 'ml-auto')
+            DOMbuttons.setAttribute('data-boardtitle', board['name'])
+            DOMbuttons.setAttribute('data-boardid', board['public_boards_id'])
+
+            let DOMAddCardButton = document.createElement('button')
+            DOMAddCardButton.classList.add('card-add', 'btn', 'btn-outline-dark', 'btn-sm', 'board-add')
+            DOMAddCardButton.setAttribute('type', 'button')
+            DOMAddCardButton.setAttribute('data-boardid', board['public_boards_id'])
+            DOMAddCardButton.setAttribute('data-boardtitle', board['name'])
+            DOMAddCardButton.innerText = 'Add Card'
+
+            let DOMCardAddForm = document.createElement('span')
+            DOMCardAddForm.classList.add('card-add-form', 'hidden')
+            DOMCardAddForm.setAttribute('data-boardtitle', board['name'])
+            DOMCardAddForm.setAttribute('data-boardid', board['public_boards_id'])
+
+            let DOMCardAddFormInput = document.createElement('input')
+            DOMCardAddFormInput.setAttribute('type', 'text')
+            DOMCardAddFormInput.classList.add('card-add-input')
+            DOMCardAddFormInput.setAttribute('data-boardtitle', board['name'])
+            DOMCardAddFormInput.setAttribute('data-boardid', board['public_boards_id'])
+            DOMCardAddFormInput.setAttribute('placeholder', 'Card content')
+
+            let DOMCardAddFormButton = document.createElement('button')
+            DOMCardAddFormButton.classList.add('card-save-btn', 'btn', 'btn-outline-dark', 'btn-sm', 'board-add')
+            DOMCardAddFormButton.setAttribute('data-boardtitle', board['name'])
+            DOMCardAddFormButton.setAttribute('data-boardid', board['public_boards_id'])
+            DOMCardAddFormButton.innerText = 'Save'
+
+            let DOMAddColumnButton = document.createElement('button')
+            DOMAddColumnButton.classList.add('column-add', 'btn', 'btn-outline-dark', 'btn-sm', 'board-add')
+            DOMAddColumnButton.setAttribute('type', 'button')
+            DOMAddColumnButton.setAttribute('data-boardtitle', board['name'])
+            DOMAddColumnButton.setAttribute('data-boardid', board['public_boards_id'])
+            DOMAddColumnButton.innerText = 'Add Column'
+
+            let DOMColumnAddForm = document.createElement('span')
+            DOMColumnAddForm.classList.add('column-add-form', 'hidden')
+            DOMColumnAddForm.setAttribute('data-boardid', board['public_boards_id'])
+
+            let DOMColumnAddFormInput = document.createElement('input')
+            DOMColumnAddFormInput.classList.add('column-add-input')
+            DOMColumnAddFormInput.setAttribute('type', 'text')
+            DOMColumnAddFormInput.setAttribute('data-boardtitle', board['name'])
+            DOMColumnAddFormInput.setAttribute('data-boardid', board['public_boards_id'])
+            DOMColumnAddFormInput.setAttribute('placeholder', 'Column name')
+
+            let DOMColumnAddFormButton = document.createElement('button')
+            DOMColumnAddFormButton.classList.add('save-status-btn', 'btn', 'btn-outline-dark', 'btn-sm', 'board-add')
+            DOMColumnAddFormButton.setAttribute('data-boardtitle', board['name'])
+            DOMColumnAddFormButton.setAttribute('data-boardid', board['public_boards_id'])
+            DOMColumnAddFormButton.innerText = 'Save'
+
+            let DOMRevealButton = document.createElement('button')
+            DOMRevealButton.classList.add('board-toggle', 'btn', 'btn-outline-dark', 'btn-sm')
+            DOMRevealButton.setAttribute('type', 'button')
+            DOMRevealButton.setAttribute('data-boardtitle', board['name'])
+            DOMRevealButton.setAttribute('data-boardid', board['public_boards_id'])
+            DOMRevealButton.innerHTML = `<i class="fas fa-chevron-down"></i>`
+
+            let DOMDeleteButton = document.createElement('button')
+            DOMDeleteButton.classList.add('board-delete', 'btn', 'btn-outline-dark', 'btn-sm')
+            DOMDeleteButton.setAttribute('type', 'button')
+            DOMDeleteButton.setAttribute('data-boardtitle', board['name'])
+            DOMDeleteButton.setAttribute('data-boardid', board['public_boards_id'])
+            DOMDeleteButton.innerHTML = `<i class="fas fa-trash-alt"></i>`
+
+            boardsContainer.appendChild(DOMboard)
+
+            DOMboard.appendChild(DOMheader)
+                DOMheader.appendChild(HeaderSpan)
+                DOMheader.appendChild(DOMbuttons)
+
+                    DOMbuttons.appendChild(DOMAddColumnButton)
+                    DOMbuttons.appendChild(DOMColumnAddForm)
+                    DOMbuttons.appendChild(DOMDeleteButton)
+                    DOMbuttons.appendChild(DOMRevealButton)
+
+            DOMbuttons.appendChild(DOMAddCardButton)
+            DOMbuttons.appendChild(DOMCardAddForm)
+
+            DOMCardAddForm.appendChild(DOMCardAddFormInput)
+            DOMCardAddForm.appendChild(DOMCardAddFormButton)
+
+            DOMColumnAddForm.appendChild(DOMColumnAddFormInput)
+            DOMColumnAddForm.appendChild(DOMColumnAddFormButton)
+
+
         }
 
-        let boardsContainer = document.querySelector('#boards');
-        boardsContainer.innerHTML = boardList;
     },
 
     showColumns: function (boardId, statuses)
