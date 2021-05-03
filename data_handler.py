@@ -86,15 +86,15 @@ def get_columns_for_board(cursor, board_id):
 
 
 @connection.connection_handler
-def new_card(cursor, card_name, card_column):
+def new_card(cursor, card_name, public_column_id, order):
 
     query = """
-            INSERT INTO public_cards ("name", "public_column_id")
-            VALUES (%(name)s, %(public_column_id)s)
-            RETURNING public_cards_id as id
+            INSERT INTO public_cards (name, public_column_id, "order")
+            VALUES (%(name)s, %(public_column_id)s, %(order)s )   
+            RETURNING public_cards_id as id   
     """
 
-    cursor.execute(query, {'name': card_name, 'public_column_id': card_column})
+    cursor.execute(query, {'name': card_name, 'public_column_id': public_column_id, "order": order})
 
     return cursor.fetchone()
 

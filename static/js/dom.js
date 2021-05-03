@@ -14,10 +14,8 @@ export let dom = {
     {
         // retrieves boards and makes showBoards called
         dataHandler.getBoards(function(boards) {
-
             dom.showBoards(boards);
             dom.addButtonHandlerToBoards();
-
 
             for (let board of boards) {
                 let boardId = board['public_boards_id']
@@ -25,19 +23,22 @@ export let dom = {
             }
         });
 
-        dataHandler.getBoardsPrivate(function(boards)
-        {
 
-            // dom.showBoards(boards);
-            // dom.addButtonHandlerToBoards();
-            //
-            //
-            // for (let board of boards)
-            // {
-            //     let boardId = board['boards_id']
-            //     dom.loadStatuses(boardId);
-            // }
-        });
+        // dataHandler.getBoardsPrivate(function(boards)
+        // {
+        //     console.log(boards)
+        //     dom.showBoards(boards);
+        //     dom.addButtonHandlerToBoards();
+        //
+        //
+        //     for (let board of boards)
+        //     {
+        //         let boardId = board['boards_id']
+        //         dom.loadStatuses(boardId);
+        //     }
+        // });
+
+
     },
 
     loadStatuses: function (boardId)
@@ -68,9 +69,10 @@ export let dom = {
         // it adds necessary event listeners also
 
         let boardList = '';
-
-        for(let board of boards)
+        //if (boards != null)
+        for (let i = 0; i < boards.length; i++)
         {
+            let board = boards[i];
             boardList += `
                 <section class="board" data-boardid="${board['public_boards_id']}">
                     <div class="board-header"><span class="board-title" data-boardid="${board['public_boards_id']}">${board['name']}</span>
@@ -287,7 +289,8 @@ export let dom = {
                 {
                 let newCardName = document.querySelector(`.card-add-input[data-boardid="${boardId}"]`).value
                     console.log(newCardName)
-                    dataHandler.createNewCard(newCardName, firstColumnId, function (response) {
+                    console.log(firstColumnId)
+                    dataHandler.createNewCard(newCardName, '4', "3", function (response) {
                     dom.loadStatuses();
                     })
                 })

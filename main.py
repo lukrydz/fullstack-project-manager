@@ -137,10 +137,10 @@ def new_card():
     # name, public_column_id, order
 
     card_name = request.json['name']
-    card_column = request.json['column']
+    public_column_id = request.json['column']
+    order = request.json['order']
 
-
-    added_card_id = data_handler.new_card(card_name=card_name, card_column=card_column)
+    added_card_id = data_handler.new_card(card_name=card_name, public_column_id=public_column_id, order=order)
 
     return added_card_id
 
