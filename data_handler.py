@@ -78,6 +78,7 @@ def get_columns_for_board(cursor, board_id):
     query = """
                 SELECT * FROM public_columns
                 WHERE public_boards_id = %(board_id)s
+                ORDER BY public_column_id ASC
     """
 
     cursor.execute(query, {'board_id': board_id})
