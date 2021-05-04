@@ -124,6 +124,12 @@ button{
     border-radius: 3px;
 }
 
+#private_boards {
+    margin: 20px;
+    background: #eeebdd;
+    border-radius: 3px;
+}
+
 .board-header{
     display: flex;
     background: #fff;

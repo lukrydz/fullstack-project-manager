@@ -269,22 +269,34 @@ export let dom = {
     {
         // shows the cards of a board
         // it adds necessary event listeners also
-        let cardsHTML = ''
+
+        let cardsContainer = document.querySelector(`#column-cards${status['public_column_id']}`);
+
         for (let card of cards)
         {
             if (card["column"] === status["name"])
             {
-                cardsHTML += `<div class="card">
-                                 <div class="card-title">${card['name']}</div>
-                                 <div class="card-icons ml-auto">
-                                      <div class="card-archive"><i class="fas fa-archive"></i></div>
-                                      <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
-                                  </div>
-                              </div>`
+                let newCard = document.createElement('div')
+                newCard.classList.add('card')
+                newCard.setAttribute('draggable', 'true')
+
+                let titleDiv = document.createElement('div')
+                titleDiv.classList.add('card-title')
+                titleDiv.innerText = card['name']
+
+                let cardIcons = document.createElement('div')
+                cardIcons.classList.add('card-icons', 'ml-auto')
+                cardIcons.innerHTML = `<div class="card-archive"><i class="fas fa-archive"></i></div>
+                <div class="card-remove"><i class="fas fa-trash-alt"></i></div>`
+
+                newCard.appendChild(titleDiv)
+                newCard.appendChild(cardIcons)
+
+                cardsContainer.appendChild(newCard)
             }
         }
-        let cardsContainer = document.querySelector(`#column-cards${status['public_column_id']}`);
-        cardsContainer.innerHTML = cardsHTML;
+
+        // cardsContainer.innerHTML = cardsHTML;
 
     },
     ////////      BUTTONS     ///////
