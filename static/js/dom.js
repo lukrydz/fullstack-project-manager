@@ -81,6 +81,9 @@ export let dom = {
             boardsContainer = document.querySelector('#private_boards');
         }
 
+        // clear screen :D
+        boardsContainer.innerHTML = ''
+
 
         for (let i = 0; i < boards.length; i++)
         {
