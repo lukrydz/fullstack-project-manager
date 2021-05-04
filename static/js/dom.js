@@ -19,37 +19,38 @@ export let dom = {
 
             for (let board of boards) {
                 let boardId = board['public_boards_id']
-                dom.loadStatuses(boardId);
+                dom.loadStatuses(boardId, 'public');
             }
         });
 
 
-        dataHandler.getBoardsPrivate(function(boards)
-        {
-            console.log(boards)
-
-             dom.showBoards(boards, 'private');
-             dom.addButtonHandlerToBoards();
-
-
-             for (let board of boards)
-             {
-                 let boardId = board['boards_id']
-                 dom.loadStatuses(boardId);
-             }
-         });
+        // dataHandler.getBoardsPrivate(function(boards)
+        // {
+        //     console.log('Private boards received from API: ', boards)
+        //
+        //      dom.showBoards(boards, 'private');
+        //      dom.addButtonHandlerToBoards(); // somewhere here this f's up
+        //
+        //
+        //      for (let board of boards)
+        //      {
+        //          let boardId = board['boards_id']
+        //          dom.loadStatuses(boardId, 'private');
+        //      }
+        //  });
 
 
     },
 
-    loadStatuses: function (boardId)
+    loadStatuses: function (boardId, publicOrPrivate)
     {
-        dataHandler.getStatuses(boardId,function (statuses)
-        {
-            dom.showColumns(boardId, statuses);
-            dom.addButtonHandlerColumns();
-            dom.loadCards(boardId, statuses)
-        })
+        if (publicOrPrivate === 'public') {
+            dataHandler.getStatuses(boardId, function (statuses) {
+                dom.showColumns(boardId, statuses);
+                dom.addButtonHandlerColumns();
+                dom.loadCards(boardId, statuses)
+            })
+        }
     },
 
     loadCards: function (boardId, statuses)
@@ -84,8 +85,14 @@ export let dom = {
         for (let i = 0; i < boards.length; i++)
         {
             let board = boards[i];
+            let boardId;
 
-            let boardId = board['public_boards_id'] || board['board_id']
+            if (publicOrPrivate === 'public') {
+                boardId = board['public_boards_id']
+            } else {
+                boardId = 'private-' + board['board_id']
+            }
+
             let boardTitle = board['name']
 
             let domBoard = document.createElement('section')
@@ -147,7 +154,7 @@ export let dom = {
 
             let boardColumnsDiv = document.createElement('div')
             boardColumnsDiv.classList.add('board-columns', 'hidden')
-            boardColumnsDiv.setAttribute('id', 'board-columns'+board['public_boards_id'])
+            boardColumnsDiv.setAttribute('id', 'board-columns'+boardId)
 
             let elementsToAddBoardIdTo = [domBoard,
                                         headerSpan,
@@ -216,21 +223,42 @@ export let dom = {
 
     showColumns: function (boardId, statuses)
     {
-        let boardColumnHTML = ''
+
+        let columnsContainer = document.getElementById(`board-columns${boardId}`);
+
         for (let status of statuses)
         {
-            boardColumnHTML += `<div class="board-column" data-statusid="${status['public_column_id']}">
-                                <div class="board-column-title" data-statusid="${status['public_column_id']}">
-                                <text class="column-name" data-statusid="${status['public_column_id']}">${status['name']}</text>
-                                <button class="column-remove" data-statusid="${status['public_column_id']}"><i class="fas fa-trash-alt"></i></button>
-                                </div>
-                                <div class="board-column-content" id="column-cards${status['public_column_id']}" data-statustitle="${status['name']}" data-statusid="${status['public_column_id']}">
-                                </div>
-                                </div>`
+            let columnId = status['public_column_id']
+
+            let divColumn = document.createElement('div')
+            divColumn.classList.add('board-column')
+
+            let divColumnTitle = document.createElement('div')
+            divColumnTitle.classList.add('board-column-title', 'column-name')
+            divColumnTitle.innerText = status['name']
+
+            let removeButton = document.createElement('button')
+            removeButton.classList.add('column-remove')
+            removeButton.innerHTML = `<i class="fas fa-trash-alt"></i>`
+
+            let columnContent = document.createElement('div')
+            columnContent.classList.add('board-column-content')
+            columnContent.setAttribute('id', `column-cards${status['public_column_id']}`)
+            columnContent.setAttribute('data-statustitle', status['name'])
+
+            let elementsToAddColumnIdTo = [divColumn, divColumnTitle, removeButton, columnContent]
+
+            for (let element of elementsToAddColumnIdTo) {
+                element.setAttribute('data-statusid', columnId)
+            }
+
+            divColumn.appendChild(divColumnTitle)
+            divColumn.appendChild(removeButton)
+            divColumn.appendChild(columnContent)
+
+            columnsContainer.appendChild(divColumn)
 
         }
-        let columnsContainer = document.getElementById(`board-columns${boardId}`);
-        columnsContainer.innerHTML = boardColumnHTML;
 
     },
 
@@ -256,7 +284,7 @@ export let dom = {
         cardsContainer.innerHTML = cardsHTML;
 
     },
-    ////////      BUTTTONS     ///////
+    ////////      BUTTONS     ///////
 
 
     // INIT BUTTONS
@@ -431,7 +459,7 @@ export let dom = {
             deleteBoardBtn.addEventListener('click', function (event)
             {
                 let boardId = deleteBoardBtn.dataset.boardid
-                console.log(boardId)
+                console.log('Deleted board id: ', boardId)
                 dataHandler.deleteBoard(boardId, function() {
                     this.loadBoards();
                 })
@@ -466,14 +494,15 @@ export let dom = {
                     })
                 }
             })
-        };
+        }
         //Delete Column by clicking on trash icon
         let deleteColumnBtns = document.querySelectorAll('.column-remove');
         for (let deleteColumnBtn of deleteColumnBtns)
         {
             deleteColumnBtn.addEventListener('click', function (event)
             {
-                let columnId = deleteColumnBtn.dataset.columnid;
+                console.log(this)
+                let columnId = deleteColumnBtn.dataset.statusid;
                 dataHandler.deleteStatus(columnId, function()
                 {
                     dom.loadStatuses()

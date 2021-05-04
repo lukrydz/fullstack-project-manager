@@ -341,7 +341,8 @@ def get_cards_for_board_private(board_id: int):
     return fetched_cards
 
 
-@app.route("/boards/public/delete/<int:board_id>/", methods=['DELETE'])
+@app.route("/boards/public/delete/<int:board_id>", methods=['DELETE'])
+@json_response
 def delete_board(board_id: int):
 
     deleted_board = data_handler.delete_board(board_id=board_id)
@@ -349,21 +350,24 @@ def delete_board(board_id: int):
     return deleted_board
 
 
-@app.route("/boards/private/delete/<int:board_id>/", methods=['DELETE'])
+@app.route("/boards/private/delete/<int:board_id>", methods=['DELETE'])
+@json_response
 def delete_board_private(board_id: int):
     deleted_board = data_handler.delete_board_private(board_id=board_id)
 
     return deleted_board
 
 
-@app.route("/columns/public/delete/<int:column_id>/", methods=['DELETE'])
+@app.route("/columns/public/delete/<int:column_id>", methods=['DELETE'])
+@json_response
 def delete_column(column_id:int):
     deleted_column = data_handler.delete_column(column_id)
 
     return deleted_column
 
 
-@app.route("/columns/private/delete/<int:column_id>/", methods=['DELETE'])
+@app.route("/columns/private/delete/<int:column_id>", methods=['DELETE'])
+@json_response
 def delete_column_private(column_id: int):
     deleted_column = data_handler.delete_column_private(column_id)
 
@@ -371,6 +375,7 @@ def delete_column_private(column_id: int):
 
 
 @app.route("/cards/public/delete/<int:card_id>", methods=['DELETE'])
+@json_response
 def delete_card(card_id: int):
 
     deleted_card = data_handler.delete_card(card_id)
