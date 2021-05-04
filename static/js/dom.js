@@ -501,8 +501,14 @@ export let dom = {
         {
             deleteColumnBtn.addEventListener('click', function (event)
             {
-                console.log(this)
                 let columnId = deleteColumnBtn.dataset.statusid;
+
+                let columnToRemove = document.querySelector(`div[data-statusid="${columnId}"]`)
+
+                console.log(columnToRemove)
+
+                columnToRemove.remove()
+
                 dataHandler.deleteStatus(columnId, function()
                 {
                     dom.loadStatuses()
