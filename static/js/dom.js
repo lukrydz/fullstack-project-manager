@@ -254,7 +254,9 @@ export let dom = {
             columnContent.ondrop = (event) => {
                 event.preventDefault();
                 let data = event.dataTransfer.getData("text");
-                event.target.appendChild(document.getElementById(data));
+                let objectData = JSON.parse(data)
+                event.target.appendChild(document.getElementById(objectData.htmlId));
+                dataHandler.updateCard(objectData['public_cards_id'], objectData['name'], status['public_column_id'], columnContent.childElementCount, () => {});
             };
 
             let elementsToAddColumnIdTo = [divColumn, divColumnTitle, removeButton, columnContent]
@@ -291,8 +293,16 @@ export let dom = {
                 newCard.setAttribute('draggable', 'true')
                 newCard.setAttribute('id', 'card-' + cardId)
                 newCard.ondragstart = (event) => {
-                    console.log('card drag start')
-                    event.dataTransfer.setData('text', event.target.id)
+                    console.log('card drag start', card)
+
+                    let objectData = {
+                        ...card,
+                        htmlId: event.target.id,
+                    }
+
+                    console.log(objectData)
+
+                    event.dataTransfer.setData('text', JSON.stringify(objectData))
                 }
 
                 let titleDiv = document.createElement('div')
