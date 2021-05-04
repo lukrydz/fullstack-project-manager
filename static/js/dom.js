@@ -248,6 +248,14 @@ export let dom = {
             columnContent.classList.add('board-column-content')
             columnContent.setAttribute('id', `column-cards${status['public_column_id']}`)
             columnContent.setAttribute('data-statustitle', status['name'])
+            columnContent.ondragover = (event) => {
+                event.preventDefault();
+            };
+            columnContent.ondrop = (event) => {
+                event.preventDefault();
+                let data = event.dataTransfer.getData("text");
+                event.target.appendChild(document.getElementById(data));
+            };
 
             let elementsToAddColumnIdTo = [divColumn, divColumnTitle, removeButton, columnContent]
 
@@ -274,11 +282,18 @@ export let dom = {
 
         for (let card of cards)
         {
+            let cardId = card['public_cards_id']
+            console.log('card: ', cardId)
             if (card["column"] === status["name"])
             {
                 let newCard = document.createElement('div')
                 newCard.classList.add('card')
                 newCard.setAttribute('draggable', 'true')
+                newCard.setAttribute('id', 'card-' + cardId)
+                newCard.ondragstart = (event) => {
+                    console.log('card drag start')
+                    event.dataTransfer.setData('text', event.target.id)
+                }
 
                 let titleDiv = document.createElement('div')
                 titleDiv.classList.add('card-title')
