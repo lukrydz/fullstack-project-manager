@@ -175,7 +175,7 @@ export let dom = {
                 boardColumnsDiv]
 
             for (let element of elementsToAddBoardTitleTo) {
-                element.setAttribute('data-boardtitle', board['name'])
+                element.setAttribute('data-boardtitle', boardTitle)
             }
 
             // chaining it all together
