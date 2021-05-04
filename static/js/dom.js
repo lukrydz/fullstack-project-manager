@@ -80,127 +80,127 @@ export let dom = {
             let boardId = board['public_boards_id'] || board['board_id']
             let boardTitle = board['name']
 
-            let DOMboard = document.createElement('section')
-            DOMboard.classList.add('board')
+            let domBoard = document.createElement('section')
+            domBoard.classList.add('board')
 
-            let DomHeader = document.createElement('div')
-            DomHeader.classList.add('board-header')
+            let domHeader = document.createElement('div')
+            domHeader.classList.add('board-header')
 
-            let HeaderSpan = document.createElement('span')
-            HeaderSpan.classList.add('board-title')
-            HeaderSpan.innerText = board['name']
+            let headerSpan = document.createElement('span')
+            headerSpan.classList.add('board-title')
+            headerSpan.innerText = board['name']
 
-            let DOMbuttons = document.createElement('div')
-            DOMbuttons.classList.add('board-specific', 'ml-auto')
+            let domButtons = document.createElement('div')
+            domButtons.classList.add('board-specific', 'ml-auto')
 
-            let DOMAddCardButton = document.createElement('button')
-            DOMAddCardButton.classList.add('card-add', 'btn', 'btn-outline-dark', 'btn-sm', 'board-add')
-            DOMAddCardButton.setAttribute('type', 'button')
-            DOMAddCardButton.innerText = 'Add Card'
+            let domAddCardButton = document.createElement('button')
+            domAddCardButton.classList.add('card-add', 'btn', 'btn-outline-dark', 'btn-sm', 'board-add')
+            domAddCardButton.setAttribute('type', 'button')
+            domAddCardButton.innerText = 'Add Card'
 
-            let DOMCardAddForm = document.createElement('span')
-            DOMCardAddForm.classList.add('card-add-form', 'hidden')
+            let domCardAddForm = document.createElement('span')
+            domCardAddForm.classList.add('card-add-form', 'hidden')
 
-            let DOMCardAddFormInput = document.createElement('input')
-            DOMCardAddFormInput.setAttribute('type', 'text')
-            DOMCardAddFormInput.classList.add('card-add-input')
-            DOMCardAddFormInput.setAttribute('placeholder', 'Card content')
+            let domCardAddFormInput = document.createElement('input')
+            domCardAddFormInput.setAttribute('type', 'text')
+            domCardAddFormInput.classList.add('card-add-input')
+            domCardAddFormInput.setAttribute('placeholder', 'Card content')
 
-            let DOMCardAddFormButton = document.createElement('button')
-            DOMCardAddFormButton.classList.add('card-save-btn', 'btn', 'btn-outline-dark', 'btn-sm', 'board-add')
-            DOMCardAddFormButton.innerText = 'Save'
+            let domCardAddFormButton = document.createElement('button')
+            domCardAddFormButton.classList.add('card-save-btn', 'btn', 'btn-outline-dark', 'btn-sm', 'board-add')
+            domCardAddFormButton.innerText = 'Save'
 
-            let DOMAddColumnButton = document.createElement('button')
-            DOMAddColumnButton.classList.add('column-add', 'btn', 'btn-outline-dark', 'btn-sm', 'board-add')
-            DOMAddColumnButton.setAttribute('type', 'button')
-            DOMAddColumnButton.innerText = 'Add Column'
+            let domAddColumnButton = document.createElement('button')
+            domAddColumnButton.classList.add('column-add', 'btn', 'btn-outline-dark', 'btn-sm', 'board-add')
+            domAddColumnButton.setAttribute('type', 'button')
+            domAddColumnButton.innerText = 'Add Column'
 
-            let DOMColumnAddForm = document.createElement('span')
-            DOMColumnAddForm.classList.add('column-add-form', 'hidden')
+            let domColumnAddForm = document.createElement('span')
+            domColumnAddForm.classList.add('column-add-form', 'hidden')
 
-            let DOMColumnAddFormInput = document.createElement('input')
-            DOMColumnAddFormInput.classList.add('column-add-input')
-            DOMColumnAddFormInput.setAttribute('type', 'text')
-            DOMColumnAddFormInput.setAttribute('placeholder', 'Column name')
+            let domColumnAddFormInput = document.createElement('input')
+            domColumnAddFormInput.classList.add('column-add-input')
+            domColumnAddFormInput.setAttribute('type', 'text')
+            domColumnAddFormInput.setAttribute('placeholder', 'Column name')
 
-            let DOMColumnAddFormButton = document.createElement('button')
-            DOMColumnAddFormButton.classList.add('save-status-btn', 'btn', 'btn-outline-dark', 'btn-sm', 'board-add')
-            DOMColumnAddFormButton.innerText = 'Save'
+            let domColumnAddFormButton = document.createElement('button')
+            domColumnAddFormButton.classList.add('save-status-btn', 'btn', 'btn-outline-dark', 'btn-sm', 'board-add')
+            domColumnAddFormButton.innerText = 'Save'
 
-            let DOMRevealButton = document.createElement('button')
-            DOMRevealButton.classList.add('board-toggle', 'btn', 'btn-outline-dark', 'btn-sm')
-            DOMRevealButton.setAttribute('type', 'button')
-            DOMRevealButton.innerHTML = `<i class="fas fa-chevron-down"></i>`
+            let domRevealButton = document.createElement('button')
+            domRevealButton.classList.add('board-toggle', 'btn', 'btn-outline-dark', 'btn-sm')
+            domRevealButton.setAttribute('type', 'button')
+            domRevealButton.innerHTML = `<i class="fas fa-chevron-down"></i>`
 
-            let DOMDeleteButton = document.createElement('button')
-            DOMDeleteButton.classList.add('board-delete', 'btn', 'btn-outline-dark', 'btn-sm')
-            DOMDeleteButton.setAttribute('type', 'button')
-            DOMDeleteButton.innerHTML = `<i class="fas fa-trash-alt"></i>`
+            let domDeleteButton = document.createElement('button')
+            domDeleteButton.classList.add('board-delete', 'btn', 'btn-outline-dark', 'btn-sm')
+            domDeleteButton.setAttribute('type', 'button')
+            domDeleteButton.innerHTML = `<i class="fas fa-trash-alt"></i>`
 
-            let BoardColumnsDiv = document.createElement('div')
-            BoardColumnsDiv.classList.add('board-columns', 'hidden')
-            BoardColumnsDiv.setAttribute('id', 'board-columns'+board['public_boards_id'])
+            let boardColumnsDiv = document.createElement('div')
+            boardColumnsDiv.classList.add('board-columns', 'hidden')
+            boardColumnsDiv.setAttribute('id', 'board-columns'+board['public_boards_id'])
 
-            let ElementsToAddBoardIdTo = [DOMboard,
-                                        HeaderSpan,
-                                        DOMbuttons,
-                                        DOMAddCardButton,
-                                        DOMCardAddForm,
-                                        DOMCardAddFormInput,
-                                        DOMCardAddFormButton,
-                                        DOMAddColumnButton,
-                                        DOMColumnAddForm,
-                                        DOMColumnAddFormInput,
-                                        DOMColumnAddFormButton,
-                                        DOMRevealButton,
-                                        DOMDeleteButton,
-                                        BoardColumnsDiv]
+            let elementsToAddBoardIdTo = [domBoard,
+                                        headerSpan,
+                                        domButtons,
+                                        domAddCardButton,
+                                        domCardAddForm,
+                                        domCardAddFormInput,
+                                        domCardAddFormButton,
+                                        domAddColumnButton,
+                                        domColumnAddForm,
+                                        domColumnAddFormInput,
+                                        domColumnAddFormButton,
+                                        domRevealButton,
+                                        domDeleteButton,
+                                        boardColumnsDiv]
 
-            for (let element of ElementsToAddBoardIdTo) {
+            for (let element of elementsToAddBoardIdTo) {
                 element.setAttribute('data-boardid', boardId)
             }
 
-            let ElementsToAddBoardTitleTo =
-                [DOMbuttons,
-                DOMAddCardButton,
-                DOMCardAddForm,
-                DOMCardAddFormInput,
-                DOMCardAddFormButton,
-                DOMAddColumnButton,
-                DOMColumnAddForm,
-                DOMColumnAddFormInput,
-                DOMColumnAddFormButton,
-                DOMRevealButton,
-                DOMDeleteButton,
-                BoardColumnsDiv]
+            let elementsToAddBoardTitleTo =
+                [domButtons,
+                domAddCardButton,
+                domCardAddForm,
+                domCardAddFormInput,
+                domCardAddFormButton,
+                domAddColumnButton,
+                domColumnAddForm,
+                domColumnAddFormInput,
+                domColumnAddFormButton,
+                domRevealButton,
+                domDeleteButton,
+                boardColumnsDiv]
 
-            for (let element of ElementsToAddBoardTitleTo) {
+            for (let element of elementsToAddBoardTitleTo) {
                 element.setAttribute('data-boardtitle', board['name'])
             }
 
             // chaining it all together
-            DOMboard.appendChild(DomHeader) // main section
+            domBoard.appendChild(domHeader) // main section
 
-            DOMboard.appendChild(BoardColumnsDiv) // main div
+            domBoard.appendChild(boardColumnsDiv) // main div
 
-            DomHeader.appendChild(HeaderSpan) // title div
-            DomHeader.appendChild(DOMbuttons) // buttons div
+            domHeader.appendChild(headerSpan) // title div
+            domHeader.appendChild(domButtons) // buttons div
 
-                    DOMbuttons.appendChild(DOMAddColumnButton)
-                    DOMbuttons.appendChild(DOMColumnAddForm)
-                    DOMbuttons.appendChild(DOMDeleteButton)
-                    DOMbuttons.appendChild(DOMRevealButton)
+                    domButtons.appendChild(domAddColumnButton)
+                    domButtons.appendChild(domColumnAddForm)
+                    domButtons.appendChild(domDeleteButton)
+                    domButtons.appendChild(domRevealButton)
 
-                    DOMbuttons.appendChild(DOMAddCardButton)
-                    DOMbuttons.appendChild(DOMCardAddForm)
+                    domButtons.appendChild(domAddCardButton)
+                    domButtons.appendChild(domCardAddForm)
 
-                        DOMCardAddForm.appendChild(DOMCardAddFormInput)
-                        DOMCardAddForm.appendChild(DOMCardAddFormButton)
+                        domCardAddForm.appendChild(domCardAddFormInput)
+                        domCardAddForm.appendChild(domCardAddFormButton)
 
-                        DOMColumnAddForm.appendChild(DOMColumnAddFormInput)
-                        DOMColumnAddForm.appendChild(DOMColumnAddFormButton)
+                        domColumnAddForm.appendChild(domColumnAddFormInput)
+                        domColumnAddForm.appendChild(domColumnAddFormButton)
 
-            boardsContainer.appendChild(DOMboard)
+            boardsContainer.appendChild(domBoard)
 
         }
 
