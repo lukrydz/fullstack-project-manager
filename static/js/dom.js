@@ -14,7 +14,7 @@ export let dom = {
     {
         // retrieves boards and makes showBoards called
         dataHandler.getBoards(function(boards) {
-            dom.showBoards(boards);
+            dom.showBoards(boards, 'public');
             dom.addButtonHandlerToBoards();
 
             for (let board of boards) {
@@ -24,19 +24,20 @@ export let dom = {
         });
 
 
-        // dataHandler.getBoardsPrivate(function(boards)
-        // {
-        //     console.log(boards)
-        //     dom.showBoards(boards);
-        //     dom.addButtonHandlerToBoards();
-        //
-        //
-        //     for (let board of boards)
-        //     {
-        //         let boardId = board['boards_id']
-        //         dom.loadStatuses(boardId);
-        //     }
-        // });
+        dataHandler.getBoardsPrivate(function(boards)
+        {
+            console.log(boards)
+
+             dom.showBoards(boards, 'private');
+             dom.addButtonHandlerToBoards();
+
+
+             for (let board of boards)
+             {
+                 let boardId = board['boards_id']
+                 dom.loadStatuses(boardId);
+             }
+         });
 
 
     },
@@ -63,7 +64,7 @@ export let dom = {
         })
     },
 
-    showBoards: function (boards)
+    showBoards: function (boards, publicOrPrivate)
     {
         // shows boards appending them to #boards div
         // it adds necessary event listeners also
@@ -71,7 +72,14 @@ export let dom = {
         // let boardList = '';
         //if (boards != null)
 
-        let boardsContainer = document.querySelector('#boards');
+        let boardsContainer;
+
+        if (publicOrPrivate === 'public') {
+            boardsContainer = document.querySelector('#boards');
+        } else {
+            boardsContainer = document.querySelector('#private_boards');
+        }
+
 
         for (let i = 0; i < boards.length; i++)
         {
